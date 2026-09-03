@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDateDisplay();
     
     renderApp();
-    showToast('Pemasukan Berhasil Dicatat!');
+    showToast('Data Pemasukan Berhasil Ditambahkan!');
   });
 
   // --- CUSTOM NEO-BRUTALIST CONFIRMATION MODAL ---
