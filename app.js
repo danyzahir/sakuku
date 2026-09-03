@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const amount = parseInt(rawAmount, 10);
 
     if (!name || isNaN(amount) || amount <= 0) {
-      showToast('⚠️ Mohon isi nama dan nominal valid!');
+      showToast('⚠️ Isi nama & nominal!');
       return;
     }
 
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateDateDisplay();
     
     renderApp();
-    showToast('Data Pemasukan Berhasil Ditambahkan!');
+    showToast('Pemasukan Ditambahkan!');
   });
 
   // --- CUSTOM NEO-BRUTALIST CONFIRMATION MODAL ---
@@ -365,14 +365,14 @@ document.addEventListener('DOMContentLoaded', () => {
       transactions = transactions.filter(t => t.id !== id);
       saveTransactions();
       renderApp();
-      showToast('Transaksi Berhasil Dihapus!');
+      showToast('Pemasukan Dihapus!');
     }
   });
 
   // Clear All
   btnClearAll.addEventListener('click', async () => {
     if (transactions.length === 0) {
-      showToast('⚠️ Belum ada data untuk dibersihkan!');
+      showToast('⚠️ Belum ada data!');
       return;
     }
 
@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
       transactions = [];
       saveTransactions();
       renderApp();
-      showToast('Seluruh data dibersihkan!');
+      showToast('Data Dibersihkan!');
     }
   });
 
@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toast.classList.add('show');
     setTimeout(() => {
       toast.classList.remove('show');
-    }, 2500);
+    }, 1600);
   }
 
   function escapeHTML(str) {
