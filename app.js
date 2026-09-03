@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const incomeForm = document.getElementById('income-form');
   const inputName = document.getElementById('input-name');
   const inputAmount = document.getElementById('input-amount');
-  const autoRecordedTimestamp = document.getElementById('auto-recorded-timestamp');
   const totalBalanceDisplay = document.getElementById('total-balance-display');
   const heroPeriodTitle = document.getElementById('hero-period-title');
   const txCountBadge = document.getElementById('tx-count-badge');
@@ -33,14 +32,168 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusClock = document.getElementById('status-clock');
   const headerTodayDate = document.getElementById('header-today-date');
 
+  // --- CUSTOM NEO-BRUTALIST DATE PICKER STATE & LOGIC ---
+  const btnOpenDatepicker = document.getElementById('btn-open-datepicker');
+  const displaySelectedDate = document.getElementById('display-selected-date');
+  const neoDatepickerModal = document.getElementById('neo-datepicker-modal');
+  const dpMonthYearLabel = document.getElementById('dp-month-year-label');
+  const dpPrevMonth = document.getElementById('dp-prev-month');
+  const dpNextMonth = document.getElementById('dp-next-month');
+  const dpDaysGrid = document.getElementById('dp-days-grid');
+  const dpCloseIcon = document.getElementById('dp-close-icon');
+  const dpQuickToday = document.getElementById('dp-quick-today');
+  const dpQuickYesterday = document.getElementById('dp-quick-yesterday');
+
+  // Selected Date state (defaults to current date)
+  let selectedDate = new Date();
+  // Month/year currently visible in the calendar view
+  let calendarViewDate = new Date(selectedDate);
+
+  const monthNamesId = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ];
+
+  function formatDisplayDateOnly(d) {
+    const day = d.getDate();
+    const month = monthNamesId[d.getMonth()].slice(0, 3);
+    const year = d.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
+
+  function updateDateDisplay() {
+    if (displaySelectedDate) {
+      displaySelectedDate.textContent = formatDisplayDateOnly(selectedDate);
+    }
+  }
+
+  function renderCalendar() {
+    const year = calendarViewDate.getFullYear();
+    const month = calendarViewDate.getMonth();
+
+    if (dpMonthYearLabel) {
+      dpMonthYearLabel.textContent = `${monthNamesId[month]} ${year}`;
+    }
+
+    dpDaysGrid.innerHTML = '';
+
+    // First day of current month (0 = Sun, 1 = Mon...)
+    const firstDay = new Date(year, month, 1).getDay();
+    // Total days in current month
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    // Total days in previous month
+    const prevMonthDays = new Date(year, month, 0).getDate();
+
+    // Previous month padding days
+    for (let i = firstDay - 1; i >= 0; i--) {
+      const dayNum = prevMonthDays - i;
+      const cell = document.createElement('div');
+      cell.className = 'dp-day-cell dp-day-other';
+      cell.textContent = dayNum;
+      dpDaysGrid.appendChild(cell);
+    }
+
+    const today = new Date();
+
+    // Current month days
+    for (let day = 1; day <= totalDays; day++) {
+      const cell = document.createElement('div');
+      cell.className = 'dp-day-cell';
+      cell.textContent = day;
+
+      const isToday = (day === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+      const isSelected = (day === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear());
+
+      if (isToday) cell.classList.add('dp-day-today');
+      if (isSelected) cell.classList.add('dp-day-selected');
+
+      cell.addEventListener('click', () => {
+        const now = new Date();
+        const newD = new Date(year, month, day, now.getHours(), now.getMinutes());
+        selectedDate = newD;
+        updateDateDisplay();
+        closeDatepicker();
+      });
+
+      dpDaysGrid.appendChild(cell);
+    }
+
+    // Next month padding days (to fill 35 grid cells)
+    const currentGridCells = firstDay + totalDays;
+    const remainingCells = (currentGridCells > 35 ? 42 : 35) - currentGridCells;
+
+    for (let day = 1; day <= remainingCells; day++) {
+      const cell = document.createElement('div');
+      cell.className = 'dp-day-cell dp-day-other';
+      cell.textContent = day;
+      dpDaysGrid.appendChild(cell);
+    }
+  }
+
+  function openDatepicker() {
+    calendarViewDate = new Date(selectedDate);
+    renderCalendar();
+    neoDatepickerModal.classList.remove('hidden');
+  }
+
+  function closeDatepicker() {
+    neoDatepickerModal.classList.add('hidden');
+  }
+
+  if (btnOpenDatepicker) {
+    btnOpenDatepicker.addEventListener('click', openDatepicker);
+  }
+
+  if (dpCloseIcon) {
+    dpCloseIcon.addEventListener('click', closeDatepicker);
+  }
+
+  if (neoDatepickerModal) {
+    neoDatepickerModal.addEventListener('click', (e) => {
+      if (e.target === neoDatepickerModal) closeDatepicker();
+    });
+  }
+
+  if (dpPrevMonth) {
+    dpPrevMonth.addEventListener('click', () => {
+      calendarViewDate.setMonth(calendarViewDate.getMonth() - 1);
+      renderCalendar();
+    });
+  }
+
+  if (dpNextMonth) {
+    dpNextMonth.addEventListener('click', () => {
+      calendarViewDate.setMonth(calendarViewDate.getMonth() + 1);
+      renderCalendar();
+    });
+  }
+
+  if (dpQuickToday) {
+    dpQuickToday.addEventListener('click', () => {
+      selectedDate = new Date();
+      updateDateDisplay();
+      closeDatepicker();
+    });
+  }
+
+  if (dpQuickYesterday) {
+    dpQuickYesterday.addEventListener('click', () => {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      selectedDate = d;
+      updateDateDisplay();
+      closeDatepicker();
+    });
+  }
+
   // --- INITIALIZATION ---
+  updateDateDisplay();
   updateClock();
   setInterval(updateClock, 1000);
   setupFilterTabs();
   setupNavigation();
   renderApp();
 
-  // --- AUTO DATE & TIME LOGIC ---
   function updateClock() {
     const now = new Date();
     
@@ -53,19 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
     if (headerTodayDate) {
       headerTodayDate.textContent = now.toLocaleDateString('id-ID', dateOptions);
-    }
-
-    // Auto Recorded Timestamp for form
-    const fullDateOptions = { 
-      day: 'numeric', 
-      month: 'short', 
-      year: 'numeric', 
-      hour: '2-digit', 
-      minute: '2-digit',
-      second: '2-digit'
-    };
-    if (autoRecordedTimestamp) {
-      autoRecordedTimestamp.textContent = now.toLocaleDateString('id-ID', fullDateOptions).replace('.', ':');
     }
   }
 
@@ -146,19 +286,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const now = new Date();
+    const txDate = selectedDate || new Date();
+
     const newTx = {
       id: 'tx_' + Date.now(),
       name: name,
       amount: amount,
-      timestamp: now.toISOString(),
-      displayDate: now.toLocaleDateString('id-ID', {
+      timestamp: txDate.toISOString(),
+      displayDate: txDate.toLocaleDateString('id-ID', {
         day: 'numeric',
         month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      }).replace('.', ':')
+        year: 'numeric'
+      })
     };
 
     transactions.unshift(newTx);
@@ -167,6 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reset Form
     inputName.value = '';
     inputAmount.value = '';
+    selectedDate = new Date();
+    updateDateDisplay();
     
     renderApp();
     showToast('Pemasukan Berhasil Dicatat!');

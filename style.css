@@ -323,6 +323,19 @@ body::before {
   font-size: 0.82rem;
   font-weight: 700;
   box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+  transition: all 0.1s ease;
+}
+
+.auto-date-badge:hover {
+  box-shadow: 4px 4px 0px var(--border-dark);
+}
+
+.auto-date-badge:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--border-dark);
 }
 
 .category-picker {
@@ -733,6 +746,191 @@ body::before {
 .modal-btn-danger {
   background: var(--neo-pink);
   color: #FFFFFF;
+}
+
+/* Custom Neo-Brutalist Date Picker Modal */
+.datepicker-card {
+  width: 100%;
+  max-width: 360px;
+  background: var(--bg-card);
+  border: 4px solid var(--border-dark);
+  border-radius: 20px;
+  box-shadow: 10px 10px 0px #000000;
+  padding: 18px;
+  position: relative;
+  transform: scale(1);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-backdrop.hidden .datepicker-card {
+  transform: scale(0.85);
+}
+
+.dp-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2.5px solid var(--border-dark);
+}
+
+.dp-title {
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: -0.3px;
+}
+
+.dp-close-icon {
+  background: var(--neo-pink);
+  color: #FFF;
+  border: 2px solid var(--border-dark);
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  transition: all 0.1s ease;
+}
+
+.dp-close-icon:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--border-dark);
+}
+
+.dp-month-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--neo-yellow);
+  border: 3px solid var(--border-dark);
+  border-radius: 12px;
+  padding: 8px 12px;
+  box-shadow: 3px 3px 0px var(--border-dark);
+  margin-bottom: 12px;
+}
+
+.dp-month-label {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: -0.3px;
+}
+
+.dp-nav-btn {
+  background: #FFF;
+  border: 2px solid var(--border-dark);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  transition: all 0.1s ease;
+}
+
+.dp-nav-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--border-dark);
+}
+
+.dp-quick-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.dp-quick-btn {
+  background: #FFF;
+  border: 2px solid var(--border-dark);
+  padding: 6px;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-weight: 800;
+  font-size: 0.78rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  transition: all 0.1s ease;
+}
+
+.dp-quick-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--border-dark);
+}
+
+.dp-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #444;
+}
+
+.dp-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.dp-day-cell {
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFF;
+  border: 2px solid var(--border-dark);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  transition: all 0.1s ease;
+  user-select: none;
+}
+
+.dp-day-cell:hover:not(.dp-day-other) {
+  background: var(--neo-cyan);
+  transform: translateY(-1px);
+}
+
+.dp-day-cell:active:not(.dp-day-other) {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--border-dark);
+}
+
+.dp-day-cell.dp-day-today {
+  border-color: #000;
+  background: var(--neo-yellow);
+}
+
+.dp-day-cell.dp-day-selected {
+  background: var(--neo-lime) !important;
+  box-shadow: 3px 3px 0px var(--border-dark);
+  border-width: 2.5px;
+  transform: scale(1.05);
+}
+
+.dp-day-cell.dp-day-other {
+  opacity: 0.35;
+  background: #F4F0EA;
+  box-shadow: none;
+  border-style: dashed;
 }
 
 /* Responsive adjustments */
