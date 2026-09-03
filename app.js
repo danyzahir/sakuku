@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toast.classList.add('show');
     setTimeout(() => {
       toast.classList.remove('show');
-    }, 1600);
+    }, 1000);
   }
 
   function escapeHTML(str) {
