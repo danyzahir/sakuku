@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CuanKu! - Catat Pemasukan Neo-Brutalisme</title>
+  <meta name="description" content="Aplikasi Pencatat Pemasukan Keuangan Harian, Mingguan, dan Bulanan dengan Tampilan Mobile Neo-Brutalism Interaktif.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Toast Notification Alert -->
+  <div id="toast" class="toast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toast-text">Pemasukan Berhasil Dicatat!</span>
+  </div>
+
+  <!-- Mobile Viewport Container -->
+  <div class="app-viewport">
+    
+    <!-- Mobile Status Bar Mockup -->
+    <div class="mobile-status-bar">
+      <span id="status-clock">09:41</span>
+      <div class="status-notch"></div>
+      <div class="status-icons">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.54 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+        <span>5G</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"/><line x1="20" y1="10" x2="20" y2="14" stroke="currentColor" stroke-width="2"/></svg>
+      </div>
+    </div>
+
+    <!-- App Header -->
+    <header class="app-header">
+      <div class="brand-badge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+        <span>CUANKU!</span>
+      </div>
+      <div class="live-time-pill" id="header-today-date">
+        3 Sep 2026
+      </div>
+    </header>
+
+    <!-- Main Scrollable Content Area -->
+    <main class="scroll-content">
+
+      <!-- View Section: Dashboard -->
+      <section id="view-dashboard">
+        
+        <!-- Total Income Hero Card -->
+        <div class="balance-hero">
+          <div class="hero-label" id="hero-period-title">Total Pemasukan (Semua)</div>
+          <div class="hero-amount" id="total-balance-display">Rp 0</div>
+          <div class="hero-footer">
+            <span class="hero-badge" id="tx-count-badge">0 Transaksi</span>
+            <span id="hero-subtext" style="display:inline-flex; align-items:center; gap:4px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              Auto Update Real-time
+            </span>
+          </div>
+        </div>
+
+        <!-- Period Filter Tabs (Harian, Mingguan, Bulanan, Semua) -->
+        <div class="filter-tabs" role="tablist" aria-label="Filter Periode Pemasukan">
+          <button class="tab-btn active" data-period="all" role="tab" aria-selected="true" id="tab-all">Semua</button>
+          <button class="tab-btn" data-period="daily" role="tab" aria-selected="false" id="tab-daily">Harian</button>
+          <button class="tab-btn" data-period="weekly" role="tab" aria-selected="false" id="tab-weekly">Mingguan</button>
+          <button class="tab-btn" data-period="monthly" role="tab" aria-selected="false" id="tab-monthly">Bulanan</button>
+        </div>
+
+        <!-- Interactive Neo-Brutalist Visual Chart -->
+        <div class="chart-box">
+          <div class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+            Ringkasan Visual <span class="title-tag" id="chart-period-tag">PERIODE</span>
+          </div>
+          <div class="chart-bars-container" id="chart-bars">
+            <!-- Dynamic chart bars injected via JS -->
+          </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-label">Rata-Rata Entry</div>
+            <div class="stat-val" id="stat-avg">Rp 0</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Tertinggi</div>
+            <div class="stat-val" id="stat-max">Rp 0</div>
+          </div>
+        </div>
+
+        <!-- Form Add Income Section -->
+        <div class="neo-card neo-card-yellow">
+          <div class="section-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Pemasukan
+          </div>
+          
+          <form id="income-form">
+            
+            <!-- Auto Recorded Date Field -->
+            <div class="form-group">
+              <label class="form-label" style="display:flex; align-items:center; gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M12 14v2l1 1"/></svg>
+                Tanggal (Tercatat Otomatis)
+              </label>
+              <div class="auto-date-badge">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span id="auto-recorded-timestamp">Loading timestamp...</span>
+              </div>
+            </div>
+
+            <!-- Nama / Keterangan Input -->
+            <div class="form-group">
+              <label for="input-name" class="form-label" style="display:flex; align-items:center; gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                Nama / Keterangan Pemasukan
+              </label>
+              <input type="text" id="input-name" class="form-input" placeholder="Cth: Gaji Bulanan, Project Freelance..." required autocomplete="off">
+            </div>
+
+            <!-- Nominal Amount Input -->
+            <div class="form-group">
+              <label for="input-amount" class="form-label" style="display:flex; align-items:center; gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+                Nominal Pemasukan (Rp)
+              </label>
+              <input type="text" id="input-amount" class="form-input" placeholder="Cth: 1500000" required inputmode="numeric">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-neo" id="btn-submit">
+              SIMPAN PEMASUKAN NOW
+            </button>
+          </form>
+        </div>
+
+        <!-- Recent Transactions Section -->
+        <div class="neo-card">
+          <div class="section-title" style="justify-content: space-between;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+              Riwayat Catatan <span class="title-tag" id="tx-filter-tag">SEMUA</span>
+            </div>
+            <button id="btn-clear-all" style="background:transparent; border:none; color:#FF5277; font-weight:800; font-size:0.75rem; cursor:pointer; text-decoration:underline;">Clear All</button>
+          </div>
+
+          <!-- Search Filter Box -->
+          <div class="form-group" style="margin-bottom:12px;">
+            <input type="text" id="input-search" class="form-input" style="padding: 8px 12px; font-size:0.85rem;" placeholder="🔍 Cari transaksi...">
+          </div>
+
+          <!-- Transaction List Container -->
+          <div class="tx-list" id="tx-list-container">
+            <!-- Dynamic items rendered by JS -->
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" id="nav-dashboard">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" id="nav-add">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span>Catat</span>
+      </button>
+      <button class="nav-item" id="nav-history">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>Riwayat</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Custom Neo-Brutalist Delete Confirmation Modal -->
+  <div id="custom-confirm-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-icon-badge">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h3 class="modal-title" id="modal-confirm-title">Hapus Pemasukan?</h3>
+      <p class="modal-desc" id="modal-confirm-desc">Apakah kamu yakin ingin menghapus catatan pemasukan ini? Tindakan ini tidak dapat dibatalkan.</p>
+      <div class="modal-actions">
+        <button id="btn-modal-cancel" class="modal-btn modal-btn-cancel">BATAL</button>
+        <button id="btn-modal-confirm" class="modal-btn modal-btn-danger">YA, HAPUS!</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
