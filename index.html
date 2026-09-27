@@ -96,11 +96,42 @@
           </div>
         </div>
 
-        <!-- Grouped Neo-Brutalist Visual Bar Chart: Pendapatan vs Pengeluaran -->
+        <!-- Grouped Neo-Brutalist Visual Bar Chart: 12 Bulan (Pendapatan vs Pengeluaran) -->
         <div class="chart-box">
-          <div class="section-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
-            Grafik Komparasi <span class="title-tag" id="dash-chart-period-tag">SEMUA</span>
+          <div class="section-title" style="justify-content: space-between;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+              Grafik 12 Bulan
+            </div>
+            <span class="title-tag" id="dash-chart-period-tag">2026</span>
+          </div>
+
+          <!-- Year Navigator Bar -->
+          <div class="chart-year-nav">
+            <button type="button" class="chart-year-btn" id="chart-prev-year" title="Tahun Sebelumnya">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span class="chart-year-label" id="chart-year-display">Tahun 2026</span>
+            <button type="button" class="chart-year-btn" id="chart-next-year" title="Tahun Berikutnya">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+
+          <!-- Month Selector Chips (Semua + 12 Bulan) -->
+          <div class="month-chips-wrap" id="dash-month-chips">
+            <button type="button" class="month-chip active" data-month="all">Semua (12 Bulan)</button>
+            <button type="button" class="month-chip" data-month="0">Jan</button>
+            <button type="button" class="month-chip" data-month="1">Feb</button>
+            <button type="button" class="month-chip" data-month="2">Mar</button>
+            <button type="button" class="month-chip" data-month="3">Apr</button>
+            <button type="button" class="month-chip" data-month="4">Mei</button>
+            <button type="button" class="month-chip" data-month="5">Jun</button>
+            <button type="button" class="month-chip" data-month="6">Jul</button>
+            <button type="button" class="month-chip" data-month="7">Agu</button>
+            <button type="button" class="month-chip" data-month="8">Sep</button>
+            <button type="button" class="month-chip" data-month="9">Okt</button>
+            <button type="button" class="month-chip" data-month="10">Nov</button>
+            <button type="button" class="month-chip" data-month="11">Des</button>
           </div>
 
           <!-- Chart Legend -->
@@ -115,9 +146,13 @@
             </div>
           </div>
 
-          <!-- Dynamic Grouped Chart Container -->
+          <!-- Dynamic 12-Month Grouped Chart Container -->
           <div class="grouped-chart-container" id="dash-chart-bars">
             <!-- Rendered by JS -->
+          </div>
+
+          <div style="font-size:0.72rem; color:#777; font-weight:700; text-align:center; margin-top:8px;">
+            Geser & klik bulan pada grafik untuk filter ringkasan dashboard
           </div>
         </div>
 

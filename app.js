@@ -29,6 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let incomePeriod = 'all';
   let expensePeriod = 'all';
 
+  // Dashboard Year & Month Selection States (12-Month System)
+  let dashYear = new Date().getFullYear();
+  let dashSelectedMonth = 'all'; // 'all' or 0..11
+
   // Date Picker States
   let incomeSelectedDate = new Date();
   let expenseSelectedDate = new Date();
@@ -91,6 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const dashExpenseCount = document.getElementById('dash-expense-count');
   const dashChartPeriodTag = document.getElementById('dash-chart-period-tag');
   const dashChartBars = document.getElementById('dash-chart-bars');
+  const chartPrevYear = document.getElementById('chart-prev-year');
+  const chartNextYear = document.getElementById('chart-next-year');
+  const chartYearDisplay = document.getElementById('chart-year-display');
+  const dashMonthChips = document.getElementById('dash-month-chips');
   const ratioExpenseBar = document.getElementById('ratio-expense-bar');
   const ratioSavingsBar = document.getElementById('ratio-savings-bar');
   const ratioExpenseText = document.getElementById('ratio-expense-text');
@@ -133,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updatePickerButtonDisplays();
   setupNavigationTabs();
   setupPeriodFilters();
+  setupDashboardYearMonthNav();
   setupFormFormatting();
   setupFormSubmissions();
   setupDatepicker();
@@ -658,11 +667,90 @@ document.addEventListener('DOMContentLoaded', () => {
     renderExpenseView();
   }
 
+  // --- DASHBOARD YEAR & MONTH SELECTOR LOGIC ---
+  function setupDashboardYearMonthNav() {
+    if (chartPrevYear) {
+      chartPrevYear.addEventListener('click', () => {
+        dashYear--;
+        updateYearMonthUI();
+        renderDashboard();
+      });
+    }
+
+    if (chartNextYear) {
+      chartNextYear.addEventListener('click', () => {
+        dashYear++;
+        updateYearMonthUI();
+        renderDashboard();
+      });
+    }
+
+    if (dashMonthChips) {
+      dashMonthChips.addEventListener('click', (e) => {
+        const chip = e.target.closest('.month-chip');
+        if (!chip) return;
+        const val = chip.dataset.month;
+        dashSelectedMonth = val === 'all' ? 'all' : parseInt(val, 10);
+        updateMonthChipActiveState();
+        renderDashboard();
+      });
+    }
+  }
+
+  function updateYearMonthUI() {
+    if (chartYearDisplay) {
+      chartYearDisplay.textContent = `Tahun ${dashYear}`;
+    }
+    if (dashChartPeriodTag) {
+      dashChartPeriodTag.textContent = dashSelectedMonth === 'all' 
+        ? `${dashYear}` 
+        : `${monthNamesId[dashSelectedMonth].slice(0, 3)} ${dashYear}`;
+    }
+  }
+
+  function updateMonthChipActiveState() {
+    if (!dashMonthChips) return;
+    dashMonthChips.querySelectorAll('.month-chip').forEach(c => {
+      const val = c.dataset.month;
+      if ((val === 'all' && dashSelectedMonth === 'all') || (val !== 'all' && parseInt(val, 10) === dashSelectedMonth)) {
+        c.classList.add('active');
+      } else {
+        c.classList.remove('active');
+      }
+    });
+  }
+
   // ==========================================================================
-  // VIEW 1: DASHBOARD (GRAFIK PENDAPATAN VS PENGELUARAN & RATIO ANALYTICS)
+  // VIEW 1: DASHBOARD (GRAFIK 12 BULAN PENDAPATAN VS PENGELUARAN & CASHFLOW)
   // ==========================================================================
   function renderDashboard() {
-    const periodFiltered = filterByPeriod(transactions, dashPeriod);
+    updateYearMonthUI();
+    updateMonthChipActiveState();
+
+    let periodFiltered;
+    let periodTitle;
+
+    if (dashPeriod === 'daily') {
+      periodFiltered = filterByPeriod(transactions, 'daily');
+      periodTitle = 'Saldo Bersih (Hari Ini)';
+    } else if (dashPeriod === 'weekly') {
+      periodFiltered = filterByPeriod(transactions, 'weekly');
+      periodTitle = 'Saldo Bersih (7 Hari Terakhir)';
+    } else if (dashSelectedMonth !== 'all') {
+      // Specific month selected
+      periodFiltered = transactions.filter(t => {
+        const d = new Date(t.timestamp);
+        return d.getFullYear() === dashYear && d.getMonth() === dashSelectedMonth;
+      });
+      periodTitle = `Saldo Bersih (${monthNamesId[dashSelectedMonth]} ${dashYear})`;
+    } else {
+      // Whole 12 months for dashYear
+      periodFiltered = transactions.filter(t => {
+        const d = new Date(t.timestamp);
+        return d.getFullYear() === dashYear;
+      });
+      periodTitle = `Saldo Bersih (Tahun ${dashYear})`;
+    }
 
     const incomeFiltered = periodFiltered.filter(t => t.type === 'income');
     const expenseFiltered = periodFiltered.filter(t => t.type === 'expense');
@@ -671,15 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalExpense = expenseFiltered.reduce((sum, t) => sum + t.amount, 0);
     const netBalance = totalIncome - totalExpense;
 
-    // Period Titles
-    const periodTitles = {
-      all: 'Saldo Bersih (Semua)',
-      daily: 'Saldo Bersih (Hari Ini)',
-      weekly: 'Saldo Bersih (7 Hari Terakhir)',
-      monthly: 'Saldo Bersih (Bulan Ini)'
-    };
-    if (dashPeriodTitle) dashPeriodTitle.textContent = periodTitles[dashPeriod];
-    if (dashChartPeriodTag) dashChartPeriodTag.textContent = dashPeriod.toUpperCase();
+    if (dashPeriodTitle) dashPeriodTitle.textContent = periodTitle;
 
     // 1. Net Balance Display
     if (netBalanceDisplay) {
@@ -689,6 +769,25 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         netBalanceDisplay.style.color = '#0F0F0F';
       }
+    }
+
+    // 2. Dual Mini Hero Cards
+    if (dashIncomeDisplay) dashIncomeDisplay.textContent = formatRupiah(totalIncome);
+    if (dashIncomeCount) dashIncomeCount.textContent = `${incomeFiltered.length} Masuk`;
+
+    if (dashExpenseDisplay) dashExpenseDisplay.textContent = formatRupiah(totalExpense);
+    if (dashExpenseCount) dashExpenseCount.textContent = `${expenseFiltered.length} Keluar`;
+
+    // 3. Ratio Progress Bar
+    let expensePct = 0;
+    let savingsPct = 100;
+
+    if (totalIncome > 0) {
+      expensePct = Math.min(Math.round((totalExpense / totalIncome) * 100), 100);
+      savingsPct = Math.max(100 - expensePct, 0);
+    } else if (totalExpense > 0) {
+      expensePct = 100;
+      savingsPct = 0;
     }
 
     if (ratioExpenseBar) ratioExpenseBar.style.width = `${expensePct}%`;
@@ -702,162 +801,89 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dashStatAvgIncome) dashStatAvgIncome.textContent = formatRupiah(avgIncome);
     if (dashStatAvgExpense) dashStatAvgExpense.textContent = formatRupiah(avgExpense);
 
-    // 5. Render Grouped Visual Chart (Pendapatan vs Pengeluaran)
-    renderGroupedBarChart(incomeFiltered, expenseFiltered);
+    // 5. Render 12-Month Grouped Bar Chart (Jan - Des)
+    render12MonthChart();
 
-    // 6. Render Recent Combined Activity (5 latest items)
-    renderRecentActivity();
+    // 6. Render Recent Combined Activity
+    renderRecentActivity(periodFiltered);
   }
 
-  // --- GROUPED BAR CHART: PENDAPATAN VS PENGELUARAN ---
-  function renderGroupedBarChart(incomeList, expenseList) {
+  // --- RENDER 12-MONTH GROUPED VISUAL BAR CHART ---
+  function render12MonthChart() {
     if (!dashChartBars) return;
     dashChartBars.innerHTML = '';
 
-    const now = new Date();
+    const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const monthlyIncome = Array(12).fill(0);
+    const monthlyExpense = Array(12).fill(0);
 
-    if (dashPeriod === 'weekly') {
-      // 7 days grouped (past 7 days)
-      const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
-      const incomeTotals = Array(7).fill(0);
-      const expenseTotals = Array(7).fill(0);
-
-      incomeList.forEach(tx => {
-        const d = new Date(tx.timestamp).getDay();
-        incomeTotals[d] += tx.amount;
-      });
-
-      expenseList.forEach(tx => {
-        const d = new Date(tx.timestamp).getDay();
-        expenseTotals[d] += tx.amount;
-      });
-
-      const maxVal = Math.max(...incomeTotals, ...expenseTotals, 1);
-
-      for (let i = 6; i >= 0; i--) {
-        const targetDate = new Date();
-        targetDate.setDate(now.getDate() - i);
-        const dayIdx = targetDate.getDay();
-        const label = dayNames[dayIdx];
-
-        const incVal = incomeTotals[dayIdx];
-        const expVal = expenseTotals[dayIdx];
-
-        const incHeight = incVal > 0 ? Math.max(Math.round((incVal / maxVal) * 100), 8) : 4;
-        const expHeight = expVal > 0 ? Math.max(Math.round((expVal / maxVal) * 100), 8) : 4;
-
-        const col = document.createElement('div');
-        col.className = 'grouped-col';
-        col.innerHTML = `
-          <div class="bar-pair">
-            <div class="bar-single income-bar" style="height: ${incHeight}%;" title="${label} - Pendapatan: ${formatRupiah(incVal)}"></div>
-            <div class="bar-single expense-bar" style="height: ${expHeight}%;" title="${label} - Pengeluaran: ${formatRupiah(expVal)}"></div>
-          </div>
-          <span class="bar-label">${label}</span>
-        `;
-        dashChartBars.appendChild(col);
+    // Aggregate all transactions for dashYear
+    transactions.forEach(tx => {
+      const d = new Date(tx.timestamp);
+      if (d.getFullYear() === dashYear) {
+        const m = d.getMonth();
+        if (tx.type === 'income') {
+          monthlyIncome[m] += tx.amount;
+        } else {
+          monthlyExpense[m] += tx.amount;
+        }
       }
+    });
 
-    } else if (dashPeriod === 'monthly') {
-      // 4 weeks grouped
-      const incWeeks = [0, 0, 0, 0];
-      const expWeeks = [0, 0, 0, 0];
+    const maxVal = Math.max(...monthlyIncome, ...monthlyExpense, 1);
+    const currentCalMonth = new Date().getMonth();
+    const currentCalYear = new Date().getFullYear();
 
-      incomeList.forEach(tx => {
-        const dateNum = new Date(tx.timestamp).getDate();
-        if (dateNum <= 7) incWeeks[0] += tx.amount;
-        else if (dateNum <= 14) incWeeks[1] += tx.amount;
-        else if (dateNum <= 21) incWeeks[2] += tx.amount;
-        else incWeeks[3] += tx.amount;
+    shortMonths.forEach((label, m) => {
+      const inc = monthlyIncome[m];
+      const exp = monthlyExpense[m];
+
+      const incHeight = inc > 0 ? Math.max(Math.round((inc / maxVal) * 100), 8) : 4;
+      const expHeight = exp > 0 ? Math.max(Math.round((exp / maxVal) * 100), 8) : 4;
+
+      const isSelected = (dashSelectedMonth === m);
+      const isCurrentMonth = (currentCalYear === dashYear && currentCalMonth === m);
+
+      const col = document.createElement('div');
+      col.className = `grouped-col ${isSelected ? 'active-month' : ''} ${isCurrentMonth ? 'current-calendar-month' : ''}`;
+      col.title = `${monthNamesId[m]} ${dashYear}\nPendapatan: ${formatRupiah(inc)}\nPengeluaran: ${formatRupiah(exp)}`;
+      col.innerHTML = `
+        <div class="bar-pair">
+          <div class="bar-single income-bar" style="height: ${incHeight}%;" title="Pendapatan: ${formatRupiah(inc)}"></div>
+          <div class="bar-single expense-bar" style="height: ${expHeight}%;" title="Pengeluaran: ${formatRupiah(exp)}"></div>
+        </div>
+        <span class="bar-label" style="font-size:0.68rem; font-weight:800; ${isCurrentMonth ? 'color:#047857; text-decoration:underline;' : ''}">${label}</span>
+      `;
+
+      col.addEventListener('click', () => {
+        if (dashSelectedMonth === m) {
+          dashSelectedMonth = 'all';
+        } else {
+          dashSelectedMonth = m;
+        }
+        updateMonthChipActiveState();
+        renderDashboard();
       });
 
-      expenseList.forEach(tx => {
-        const dateNum = new Date(tx.timestamp).getDate();
-        if (dateNum <= 7) expWeeks[0] += tx.amount;
-        else if (dateNum <= 14) expWeeks[1] += tx.amount;
-        else if (dateNum <= 21) expWeeks[2] += tx.amount;
-        else expWeeks[3] += tx.amount;
-      });
+      dashChartBars.appendChild(col);
+    });
 
-      const maxVal = Math.max(...incWeeks, ...expWeeks, 1);
-      const labels = ['W1', 'W2', 'W3', 'W4'];
-
-      labels.forEach((label, i) => {
-        const incVal = incWeeks[i];
-        const expVal = expWeeks[i];
-
-        const incHeight = incVal > 0 ? Math.max(Math.round((incVal / maxVal) * 100), 8) : 4;
-        const expHeight = expVal > 0 ? Math.max(Math.round((expVal / maxVal) * 100), 8) : 4;
-
-        const col = document.createElement('div');
-        col.className = 'grouped-col';
-        col.innerHTML = `
-          <div class="bar-pair">
-            <div class="bar-single income-bar" style="height: ${incHeight}%;" title="Minggu ${i+1} - Masuk: ${formatRupiah(incVal)}"></div>
-            <div class="bar-single expense-bar" style="height: ${expHeight}%;" title="Minggu ${i+1} - Keluar: ${formatRupiah(expVal)}"></div>
-          </div>
-          <span class="bar-label">${label}</span>
-        `;
-        dashChartBars.appendChild(col);
-      });
-
-    } else {
-      // 'all' or 'daily': compare by latest active 5 entries / slots
-      const incTotal = incomeList.reduce((acc, t) => acc + t.amount, 0);
-      const expTotal = expenseList.reduce((acc, t) => acc + t.amount, 0);
-
-      // Create a comparative 5-column breakdown: Total, Rata-rata, Max, Entry 1, Entry 2
-      const slotLabels = ['Total', 'Rerata', 'Maks', 'Entry1', 'Entry2'];
-      const incMax = incomeList.length > 0 ? Math.max(...incomeList.map(t => t.amount)) : 0;
-      const expMax = expenseList.length > 0 ? Math.max(...expenseList.map(t => t.amount)) : 0;
-      const incAvg = incomeList.length > 0 ? Math.round(incTotal / incomeList.length) : 0;
-      const expAvg = expenseList.length > 0 ? Math.round(expTotal / expenseList.length) : 0;
-
-      const incSlots = [
-        incTotal,
-        incAvg,
-        incMax,
-        incomeList[0] ? incomeList[0].amount : 0,
-        incomeList[1] ? incomeList[1].amount : 0
-      ];
-
-      const expSlots = [
-        expTotal,
-        expAvg,
-        expMax,
-        expenseList[0] ? expenseList[0].amount : 0,
-        expenseList[1] ? expenseList[1].amount : 0
-      ];
-
-      const maxVal = Math.max(...incSlots, ...expSlots, 1);
-
-      slotLabels.forEach((label, i) => {
-        const incVal = incSlots[i];
-        const expVal = expSlots[i];
-
-        const incHeight = incVal > 0 ? Math.max(Math.round((incVal / maxVal) * 100), 8) : 4;
-        const expHeight = expVal > 0 ? Math.max(Math.round((expVal / maxVal) * 100), 8) : 4;
-
-        const col = document.createElement('div');
-        col.className = 'grouped-col';
-        col.innerHTML = `
-          <div class="bar-pair">
-            <div class="bar-single income-bar" style="height: ${incHeight}%;" title="${label} - Pendapatan: ${formatRupiah(incVal)}"></div>
-            <div class="bar-single expense-bar" style="height: ${expHeight}%;" title="${label} - Pengeluaran: ${formatRupiah(expVal)}"></div>
-          </div>
-          <span class="bar-label">${label}</span>
-        `;
-        dashChartBars.appendChild(col);
-      });
-    }
+    // Auto scroll to active month or current calendar month
+    setTimeout(() => {
+      const activeCol = dashChartBars.querySelector('.active-month') || dashChartBars.querySelector('.current-calendar-month');
+      if (activeCol) {
+        activeCol.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }, 60);
   }
 
   // --- RECENT COMBINED ACTIVITY (DASHBOARD) ---
-  function renderRecentActivity() {
+  function renderRecentActivity(filteredList) {
     if (!dashRecentList) return;
     dashRecentList.innerHTML = '';
 
-    const recent5 = transactions.slice(0, 5);
+    const sourceList = filteredList || transactions;
+    const recent5 = sourceList.slice(0, 5);
 
     if (recent5.length === 0) {
       dashRecentList.innerHTML = `
