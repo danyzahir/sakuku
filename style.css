@@ -997,6 +997,314 @@ body::before {
   border-style: dashed;
 }
 
+/* ==========================================================================
+   3-TAB SYSTEM & MULTI-VIEW STYLING
+   ========================================================================== */
+
+.tab-view {
+  animation: tabFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-view.hidden {
+  display: none !important;
+}
+
+@keyframes tabFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dual Summary Hero Grid (Dashboard) */
+.dual-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mini-hero {
+  border: var(--border-width) solid var(--border-dark);
+  border-radius: var(--radius);
+  padding: 14px 12px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mini-hero-income {
+  background-color: #E8FFF0;
+  border-color: var(--border-dark);
+}
+
+.mini-hero-expense {
+  background-color: #FFEBEF;
+  border-color: var(--border-dark);
+}
+
+.mini-hero-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.mini-hero-title.income-label {
+  color: #047857;
+}
+
+.mini-hero-title.expense-label {
+  color: #BE123C;
+}
+
+.mini-hero-amount {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 6px 0 4px 0;
+  word-break: break-word;
+}
+
+.mini-hero-amount.income-amount {
+  color: #065F46;
+}
+
+.mini-hero-amount.expense-amount {
+  color: #9F1239;
+}
+
+.mini-hero-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: #FFF;
+  border: 1.5px solid var(--border-dark);
+  padding: 2px 6px;
+  border-radius: 8px;
+  align-self: flex-start;
+}
+
+/* Expense Hero Theme (Tab Pengeluaran) */
+.expense-hero {
+  position: relative;
+  background: var(--neo-pink);
+  color: #FFF;
+  border: var(--border-width) solid var(--border-dark);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.expense-hero .hero-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.expense-hero .hero-amount {
+  color: #FFF;
+}
+
+.expense-hero .hero-badge {
+  background: #FFF;
+  color: var(--border-dark) !important;
+}
+
+/* Grouped Neo-Brutalist Visual Bar Chart (Pendapatan vs Pengeluaran) */
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  background: #F8F6F2;
+  border: 2px solid var(--border-dark);
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border-dark);
+  border-radius: 3px;
+}
+
+.legend-dot.dot-income {
+  background: var(--neo-lime);
+}
+
+.legend-dot.dot-expense {
+  background: var(--neo-pink);
+}
+
+.grouped-chart-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 160px;
+  padding-top: 25px;
+  border-bottom: 2.5px solid var(--border-dark);
+  gap: 8px;
+}
+
+.grouped-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.bar-pair {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  width: 100%;
+  height: 100%;
+}
+
+.bar-single {
+  flex: 1;
+  max-width: 16px;
+  border: 2px solid var(--border-dark);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  min-height: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+.bar-single.income-bar {
+  background: var(--neo-lime);
+  box-shadow: 1.5px 0px 0px var(--border-dark);
+}
+
+.bar-single.expense-bar {
+  background: var(--neo-pink);
+  box-shadow: 1.5px 0px 0px var(--border-dark);
+}
+
+.bar-single:hover {
+  filter: brightness(1.1);
+  transform: scaleY(1.04);
+}
+
+/* Ratio Progress Card */
+.ratio-card {
+  background: #FFF;
+  border: var(--border-width) solid var(--border-dark);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.ratio-bar-wrap {
+  width: 100%;
+  height: 22px;
+  background: #F4F0EA;
+  border: 2px solid var(--border-dark);
+  border-radius: 11px;
+  overflow: hidden;
+  display: flex;
+  margin: 10px 0 8px 0;
+  box-shadow: 2px 2px 0px var(--border-dark);
+}
+
+.ratio-segment-expense {
+  background: var(--neo-pink);
+  height: 100%;
+  transition: width 0.4s ease;
+  min-width: 0%;
+}
+
+.ratio-segment-savings {
+  background: var(--neo-lime);
+  height: 100%;
+  transition: width 0.4s ease;
+  min-width: 0%;
+}
+
+.ratio-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.ratio-tip {
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #FFFBE6;
+  border: 1.5px solid var(--border-dark);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Expense Submit Button */
+.btn-neo-expense {
+  background-color: var(--neo-pink);
+  color: #FFF;
+}
+
+.btn-neo-expense:active {
+  background-color: #E11D48;
+}
+
+/* Transaction amounts & tags */
+.tx-amount-expense {
+  color: #E11D48 !important;
+}
+
+.tx-amount-income {
+  color: #059669 !important;
+}
+
+.tx-badge-type {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border-dark);
+  text-transform: uppercase;
+}
+
+.tx-badge-income {
+  background: var(--neo-lime);
+  color: #000;
+}
+
+.tx-badge-expense {
+  background: var(--neo-pink);
+  color: #FFF;
+}
+
 /* Responsive adjustments */
 @media (max-width: 480px) {
   body {
