@@ -37,6 +37,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const NOTES_STORAGE_KEY = 'cuanku_neo_notes_clean_v1';
   let notes = JSON.parse(localStorage.getItem(NOTES_STORAGE_KEY)) || [];
   let notesSelectedDate = new Date();
+  sortNotesInPlace();
+
+  function sortNotesInPlace() {
+    notes.sort((a, b) => {
+      const timeA = new Date(a.timestamp).getTime();
+      const timeB = new Date(b.timestamp).getTime();
+      if (timeA !== timeB) {
+        return timeA - timeB; // Tanggal terkecil (terawal) muncul di atas
+      }
+      return (a.id || '').localeCompare(b.id || '');
+    });
+  }
 
   // Date Picker States
   let incomeSelectedDate = new Date();
@@ -627,7 +639,8 @@ document.addEventListener('DOMContentLoaded', () => {
           displayDate: formatDisplayDateOnly(noteDate)
         };
 
-        notes.unshift(newNote);
+        notes.push(newNote);
+        sortNotesInPlace();
         saveNotes();
 
         notesInputTitle.value = '';
@@ -1226,6 +1239,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderNotesList() {
     if (!notesListContainer) return;
     const query = notesInputSearch ? notesInputSearch.value.trim().toLowerCase() : '';
+
+    sortNotesInPlace();
 
     const filtered = notes.filter(n => {
       return n.title.toLowerCase().includes(query);
