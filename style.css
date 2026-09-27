@@ -42,86 +42,66 @@ input:focus, button:focus, textarea:focus, select:focus {
 
 body {
   font-family: var(--font-main);
-  background-color: #18181C;
+  background-color: var(--bg-main);
   color: var(--text-main);
   min-height: 100vh;
   min-height: 100dvh;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 20px 10px;
+  align-items: stretch;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
-/* Background grid pattern */
+/* Background subtle pattern */
 body::before {
   content: '';
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background-image: 
-    radial-gradient(#ffffff 1px, transparent 1px);
+    radial-gradient(#000000 1px, transparent 1px);
   background-size: 24px 24px;
-  opacity: 0.08;
+  opacity: 0.03;
   z-index: 0;
   pointer-events: none;
 }
 
-/* Mobile Frame Mockup Container */
+/* Mobile Frame Mockup Container - Responsive across all phone sizes */
 .app-viewport {
   width: 100%;
-  max-width: 440px;
-  min-height: 840px;
+  max-width: 480px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   background-color: var(--bg-main);
-  border: 4px solid var(--border-dark);
-  border-radius: 36px;
-  box-shadow: 12px 12px 0px #000000;
+  border-left: var(--border-width) solid var(--border-dark);
+  border-right: var(--border-width) solid var(--border-dark);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   z-index: 1;
+  margin: 0 auto;
 }
 
-/* Mobile Header Bar (Status Bar Mockup) */
+/* Mobile Status Bar Mockup Removed - Native phone status bar used */
 .mobile-status-bar {
-  height: 44px;
-  background-color: var(--neo-yellow);
-  border-bottom: var(--border-width) solid var(--border-dark);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: -0.5px;
-}
-
-.status-notch {
-  width: 110px;
-  height: 20px;
-  background-color: var(--border-dark);
-  border-radius: 0 0 12px 12px;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.status-icons {
-  display: flex;
-  gap: 8px;
-  font-size: 0.8rem;
+  display: none !important;
 }
 
 /* App Main Content Area */
 .app-header {
-  padding: 20px;
+  padding: max(16px, env(safe-area-inset-top, 16px)) 16px 14px 16px;
   background-color: var(--bg-card);
   border-bottom: var(--border-width) solid var(--border-dark);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
+  z-index: 10;
 }
 
 .brand-badge {
@@ -168,8 +148,9 @@ body::before {
 .scroll-content {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
-  padding-bottom: 90px;
+  padding: 16px 14px;
+  padding-bottom: calc(95px + env(safe-area-inset-bottom, 15px));
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Neo Brutalist Common UI Components */
@@ -621,43 +602,172 @@ body::before {
   color: #777;
 }
 
-/* Bottom Navigation Bar */
+/* Floating Neo-Brutalist Bottom Navigation Dock */
 .bottom-nav {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  left: 12px;
+  right: 12px;
+  height: 64px;
   background: #FFF;
-  border-top: var(--border-width) solid var(--border-dark);
+  border: var(--border-width) solid var(--border-dark);
+  border-radius: 24px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 0 10px;
-  z-index: 10;
+  padding: 4px 6px;
+  box-shadow: 4px 4px 0px var(--border-dark);
+  z-index: 100;
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   background: transparent;
   border: none;
   font-family: var(--font-main);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
   cursor: pointer;
   color: #777;
-  padding: 6px 12px;
-  border-radius: 10px;
+  padding: 5px 8px;
+  border-radius: 18px;
+  flex: 1;
+  max-width: 82px;
+  text-align: center;
+  transition: all 0.15s ease;
 }
 
 .nav-item.active {
   color: var(--border-dark);
   background: var(--neo-yellow);
   border: 2px solid var(--border-dark);
+  border-radius: 18px;
   box-shadow: 2px 2px 0px var(--border-dark);
+}
+
+/* Catatan (Notes) Styles */
+.hero-notes {
+  background: var(--neo-cyan);
+  border: var(--border-width) solid var(--border-dark);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.note-item {
+  background: #FFF;
+  border: var(--border-width) solid var(--border-dark);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.note-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0px var(--border-dark);
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.note-title {
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--border-dark);
+  word-break: break-word;
+}
+
+.note-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #F4F0EA;
+  border: 1.5px solid var(--border-dark);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  color: #333;
+  align-self: flex-start;
+}
+
+.note-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.note-check-btn {
+  background: var(--neo-blue);
+  color: #FFFFFF;
+  border: 2px solid var(--border-dark);
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 900;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  transition: all 0.12s ease;
+}
+
+.note-check-btn:hover {
+  background: #2563EB;
+}
+
+.note-check-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--border-dark);
+}
+
+.note-check-btn.checked {
+  background: #1D4ED8;
+  color: #FFFFFF;
+  border-color: var(--border-dark);
+  box-shadow: 1px 1px 0px var(--border-dark);
+  transform: translate(1px, 1px);
+}
+
+.note-item.is-done {
+  background: #F8F9FA;
+  border-color: #A1A1AA;
+}
+
+.note-item.is-done .note-title {
+  text-decoration: line-through;
+  color: #71717A;
+}
+
+.note-done-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: var(--neo-blue);
+  color: #FFFFFF;
+  border: 1.5px solid var(--border-dark);
+  padding: 1px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
 }
 
 .nav-icon {
@@ -1397,19 +1507,17 @@ body::before {
   color: #FFF;
 }
 
-/* Responsive adjustments */
-@media (max-width: 480px) {
+/* Responsive adjustments for all mobile screens */
+@media (max-width: 600px) {
   body {
     padding: 0;
+    background-color: var(--bg-main);
   }
   .app-viewport {
     max-width: 100%;
-    min-height: 100vh;
+    border-left: none;
+    border-right: none;
     border-radius: 0;
-    border: none;
     box-shadow: none;
-  }
-  .mobile-status-bar {
-    display: none;
   }
 }

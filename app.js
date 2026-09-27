@@ -33,10 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
   let dashYear = new Date().getFullYear();
   let dashSelectedMonth = 'all'; // 'all' or 0..11
 
+  // Notes State (Independent from financial transactions)
+  const NOTES_STORAGE_KEY = 'cuanku_neo_notes_clean_v1';
+  let notes = JSON.parse(localStorage.getItem(NOTES_STORAGE_KEY)) || [];
+  let notesSelectedDate = new Date();
+
   // Date Picker States
   let incomeSelectedDate = new Date();
   let expenseSelectedDate = new Date();
-  let currentDatePickerTarget = 'income'; // 'income' | 'expense'
+  let currentDatePickerTarget = 'income'; // 'income' | 'expense' | 'notes'
   let calendarViewDate = new Date();
 
   const monthNamesId = [
@@ -54,11 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const viewDashboard = document.getElementById('view-dashboard');
   const viewIncome = document.getElementById('view-income');
   const viewExpense = document.getElementById('view-expense');
+  const viewNotes = document.getElementById('view-notes');
 
   // Navigation Items
   const navDashboard = document.getElementById('nav-dashboard');
   const navIncome = document.getElementById('nav-income');
   const navExpense = document.getElementById('nav-expense');
+  const navNotes = document.getElementById('nav-notes');
 
   // --- CONFIRMATION MODAL DOM ---
   const customConfirmModal = document.getElementById('custom-confirm-modal');
@@ -135,6 +142,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const expenseInputSearch = document.getElementById('expense-input-search');
   const expenseTxListContainer = document.getElementById('expense-tx-list-container');
 
+  // --- NOTES VIEW DOM ELEMENTS ---
+  const notesHeroCount = document.getElementById('notes-hero-count');
+  const notesForm = document.getElementById('notes-form');
+  const notesBtnDatepicker = document.getElementById('notes-btn-datepicker');
+  const notesDisplaySelectedDate = document.getElementById('notes-display-selected-date');
+  const notesInputTitle = document.getElementById('notes-input-title');
+  const notesBtnClearAll = document.getElementById('notes-btn-clear-all');
+  const notesInputSearch = document.getElementById('notes-input-search');
+  const notesListContainer = document.getElementById('notes-list-container');
+
   // --- INITIALIZATION ---
   updateClock();
   setInterval(updateClock, 1000);
@@ -199,12 +216,13 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
   }
 
-  // --- TAB NAVIGATION SYSTEM (3 TABS) ---
+  // --- TAB NAVIGATION SYSTEM (4 TABS) ---
   function setupNavigationTabs() {
     const navItems = [
       { btn: navDashboard, view: viewDashboard, name: 'dashboard' },
       { btn: navIncome, view: viewIncome, name: 'income' },
-      { btn: navExpense, view: viewExpense, name: 'expense' }
+      { btn: navExpense, view: viewExpense, name: 'expense' },
+      { btn: navNotes, view: viewNotes, name: 'notes' }
     ];
 
     navItems.forEach(item => {
@@ -219,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentActiveTab = tabName;
 
     // Update active nav button
-    [navDashboard, navIncome, navExpense].forEach(btn => {
+    [navDashboard, navIncome, navExpense, navNotes].forEach(btn => {
       if (!btn) return;
       if (btn.dataset.tab === tabName) {
         btn.classList.add('active');
@@ -232,7 +250,8 @@ document.addEventListener('DOMContentLoaded', () => {
     [
       { view: viewDashboard, name: 'dashboard' },
       { view: viewIncome, name: 'income' },
-      { view: viewExpense, name: 'expense' }
+      { view: viewExpense, name: 'expense' },
+      { view: viewNotes, name: 'notes' }
     ].forEach(tab => {
       if (!tab.view) return;
       if (tab.name === tabName) {
@@ -340,6 +359,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (expenseDisplaySelectedDate) {
       expenseDisplaySelectedDate.textContent = formatDisplayDateOnly(expenseSelectedDate);
     }
+    if (notesDisplaySelectedDate) {
+      notesDisplaySelectedDate.textContent = formatDisplayDateOnly(notesSelectedDate);
+    }
   }
 
   function setupDatepicker() {
@@ -356,6 +378,15 @@ document.addEventListener('DOMContentLoaded', () => {
       expenseBtnDatepicker.addEventListener('click', () => {
         currentDatePickerTarget = 'expense';
         calendarViewDate = new Date(expenseSelectedDate);
+        renderCalendar();
+        neoDatepickerModal.classList.remove('hidden');
+      });
+    }
+
+    if (notesBtnDatepicker) {
+      notesBtnDatepicker.addEventListener('click', () => {
+        currentDatePickerTarget = 'notes';
+        calendarViewDate = new Date(notesSelectedDate);
         renderCalendar();
         neoDatepickerModal.classList.remove('hidden');
       });
@@ -403,8 +434,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function selectDateForTarget(d) {
     if (currentDatePickerTarget === 'income') {
       incomeSelectedDate = d;
-    } else {
+    } else if (currentDatePickerTarget === 'expense') {
       expenseSelectedDate = d;
+    } else {
+      notesSelectedDate = d;
     }
     updatePickerButtonDisplays();
     closeDatepicker();
@@ -573,6 +606,42 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('Pengeluaran Dicatat! 💸');
       });
     }
+
+    // 3. Tambah Catatan
+    if (notesForm) {
+      notesForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = notesInputTitle.value.trim();
+
+        if (!title) {
+          showToast('⚠️ Masukkan judul catatan!');
+          return;
+        }
+
+        const noteDate = notesSelectedDate || new Date();
+        const newNote = {
+          id: 'note_' + Date.now(),
+          title: title,
+          done: false,
+          timestamp: noteDate.toISOString(),
+          displayDate: formatDisplayDateOnly(noteDate)
+        };
+
+        notes.unshift(newNote);
+        saveNotes();
+
+        notesInputTitle.value = '';
+        notesSelectedDate = new Date();
+        updatePickerButtonDisplays();
+
+        renderNotesView();
+        showToast('Catatan Disimpan!');
+      });
+    }
+  }
+
+  function saveNotes() {
+    localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
   }
 
   // --- ACTIONS (DELETE & CLEAR ALL & SEARCH) ---
@@ -583,6 +652,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (expenseInputSearch) {
       expenseInputSearch.addEventListener('input', () => renderExpenseList());
+    }
+    if (notesInputSearch) {
+      notesInputSearch.addEventListener('input', () => renderNotesList());
+    }
+
+    // Clear All Catatan
+    if (notesBtnClearAll) {
+      notesBtnClearAll.addEventListener('click', async () => {
+        if (notes.length === 0) {
+          showToast('⚠️ Belum ada catatan!');
+          return;
+        }
+
+        const confirmed = await showCustomConfirm({
+          title: 'Hapus Semua Catatan?',
+          desc: 'PERINGATAN: Seluruh riwayat catatan pribadi akan dihapus permanen!',
+          confirmText: 'CLEAR CATATAN'
+        });
+
+        if (confirmed) {
+          notes = [];
+          saveNotes();
+          renderNotesView();
+          showToast('Semua Catatan Dibersihkan!');
+        }
+      });
     }
 
     // Clear All Pendapatan
@@ -633,6 +728,46 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    // Toggle single Note Done / Checklist listener
+    document.addEventListener('click', (e) => {
+      const checkBtn = e.target.closest('.note-check-btn');
+      if (!checkBtn) return;
+
+      const id = checkBtn.dataset.id;
+      const targetNote = notes.find(n => n.id === id);
+      if (!targetNote) return;
+
+      targetNote.done = !targetNote.done;
+      saveNotes();
+      renderNotesView();
+      showToast(targetNote.done ? 'Catatan Ditandai Selesai!' : 'Catatan Belum Selesai');
+    });
+
+    // Delete single Note listener
+    document.addEventListener('click', async (e) => {
+      const delNoteBtn = e.target.closest('.note-del-btn');
+      if (!delNoteBtn) return;
+
+      const id = delNoteBtn.dataset.id;
+      const targetNote = notes.find(n => n.id === id);
+      if (!targetNote) return;
+
+      const confirmed = await showCustomConfirm({
+        title: 'Hapus Catatan?',
+        desc: `Apakah kamu yakin ingin menghapus catatan "${targetNote.title}"?`,
+        confirmText: 'HAPUS NOW!'
+      });
+
+      if (confirmed) {
+        notes = notes.filter(n => n.id !== id);
+        saveNotes();
+        renderNotesView();
+        showToast('Catatan Dihapus!');
+      }
+    });
+
+    // Generic Delete Listener for any transaction with .tx-del-btn
+
     // Generic Delete Listener for any container with .tx-del-btn
     document.addEventListener('click', async (e) => {
       const delBtn = e.target.closest('.tx-del-btn');
@@ -665,6 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDashboard();
     renderIncomeView();
     renderExpenseView();
+    renderNotesView();
   }
 
   // --- DASHBOARD YEAR & MONTH SELECTOR LOGIC ---
@@ -1074,6 +1210,66 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
       expenseTxListContainer.appendChild(itemEl);
+    });
+  }
+
+  // ==========================================================================
+  // VIEW 4: CATATAN (INDEPENDENT NOTES & MEMO SYSTEM)
+  // ==========================================================================
+  function renderNotesView() {
+    if (notesHeroCount) {
+      notesHeroCount.textContent = `${notes.length} Catatan`;
+    }
+    renderNotesList();
+  }
+
+  function renderNotesList() {
+    if (!notesListContainer) return;
+    const query = notesInputSearch ? notesInputSearch.value.trim().toLowerCase() : '';
+
+    const filtered = notes.filter(n => {
+      return n.title.toLowerCase().includes(query);
+    });
+
+    notesListContainer.innerHTML = '';
+
+    if (filtered.length === 0) {
+      notesListContainer.innerHTML = `
+        <div class="empty-state">
+          Belum ada catatan tersimpan.<br>
+          <span style="font-size:0.8rem; font-weight:normal;">Tulis catatan barumu lewat form di atas!</span>
+        </div>
+      `;
+      return;
+    }
+
+    filtered.forEach(note => {
+      const isDone = Boolean(note.done);
+      const itemEl = document.createElement('div');
+      itemEl.className = `note-item ${isDone ? 'is-done' : ''}`;
+      itemEl.innerHTML = `
+        <div class="note-header">
+          <div style="flex:1; padding-right:8px;">
+            <div class="note-title">${escapeHTML(note.title)}</div>
+            <div style="display:flex; align-items:center; gap:6px; margin-top:4px; flex-wrap:wrap;">
+              <div class="note-date-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                ${note.displayDate}
+              </div>
+              ${isDone ? `<span class="note-done-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg> SELESAI</span>` : ''}
+            </div>
+          </div>
+          <div class="note-actions">
+            <button class="note-check-btn ${isDone ? 'checked' : ''}" data-id="${note.id}" title="${isDone ? 'Batal Selesai' : 'Tandai Selesai'}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+            <button class="tx-del-btn note-del-btn" data-id="${note.id}" title="Hapus Catatan">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      `;
+      notesListContainer.appendChild(itemEl);
     });
   }
 
