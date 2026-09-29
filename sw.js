@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cuanku-v1';
+const CACHE_NAME = 'cuanku-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const ASSETS_TO_CACHE = [
   './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',
+  './icon-1024.png',
   './icon-maskable-192.png',
   './icon-maskable-512.png'
 ];
