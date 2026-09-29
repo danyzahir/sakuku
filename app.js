@@ -229,10 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!splashEl) return;
 
     let isDismissed = false;
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                         window.navigator.standalone === true ||
-                         document.referrer.includes('android-app://');
-    const duration = isStandalone ? 150 : 380;
+    const duration = 850; // Durasi pas, halus & tidak terlalu cepat
     const startTime = performance.now();
 
     function dismissSplash() {
@@ -241,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
       splashEl.classList.add('splash-exit');
       setTimeout(() => {
         splashEl.style.display = 'none';
-      }, 400);
+      }, 450);
     }
 
     function updateSplash(now) {
@@ -253,8 +250,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (percentEl) percentEl.textContent = progress + '%';
 
       if (statusTextEl) {
-        if (progress < 85) {
+        if (progress < 40) {
           statusTextEl.textContent = 'Memuat Data...';
+        } else if (progress < 85) {
+          statusTextEl.textContent = 'Menyiapkan Sakuku...';
         } else {
           statusTextEl.textContent = 'Siap!';
         }
@@ -263,7 +262,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (progress < 100) {
         requestAnimationFrame(updateSplash);
       } else {
-        setTimeout(dismissSplash, 80);
+        // Bar terisi penuh 100% dan jeda 180ms agar terlihat tuntas
+        if (fillEl) fillEl.style.width = '100%';
+        if (percentEl) percentEl.textContent = '100%';
+        if (statusTextEl) statusTextEl.textContent = 'Siap!';
+        setTimeout(dismissSplash, 180);
       }
     }
 
