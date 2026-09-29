@@ -115,16 +115,17 @@ body::before {
 .brand-logo-img {
   width: 32px;
   height: 32px;
-  object-fit: cover;
-  border-radius: 50%;
+  object-fit: contain;
+  border-radius: 9px;
   border: 2px solid var(--border-dark);
   background: #FFFFFF;
-  box-shadow: 1px 1px 0px var(--border-dark);
+  box-shadow: 2px 2px 0px var(--border-dark);
+  padding: 3px;
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .brand-badge:hover .brand-logo-img {
-  transform: rotate(15deg) scale(1.15);
+  transform: rotate(12deg) scale(1.12);
 }
 
 .live-time-pill {
@@ -201,17 +202,18 @@ body::before {
   position: absolute;
   top: 14px;
   right: 14px;
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   background: #FFFFFF;
   border: 2.5px solid var(--border-dark);
-  border-radius: 12px;
+  border-radius: 13px;
   box-shadow: 3px 3px 0px var(--border-dark);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: transform 0.2s ease;
+  padding: 5px;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .hero-logo-badge:hover {
@@ -221,7 +223,8 @@ body::before {
 .hero-logo-badge img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .hero-label {
@@ -813,6 +816,28 @@ body::before {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.3px;
+}
+
+.mini-hero.clickable-card {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+}
+
+.mini-hero.clickable-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.mini-hero.clickable-card:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--border-dark);
+}
+
+.mini-hero.clickable-card:focus-visible {
+  outline: 3px solid var(--border-dark);
+  outline-offset: 2px;
 }
 
 .mini-hero-amount {
@@ -1898,4 +1923,228 @@ body::before {
     border-radius: 0;
     box-shadow: none;
   }
+}
+
+/* ==========================================================================
+   NEO-BRUTALIST OPENING / SPLASH SCREEN ANIMATION
+   ========================================================================== */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background-color: var(--neo-yellow);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 24px;
+  overflow: hidden;
+  user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+  transition: transform 0.65s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.4s ease;
+}
+
+.splash-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#0F0F0F 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.splash-screen.splash-exit {
+  transform: translateY(-105%);
+  pointer-events: none;
+}
+
+.splash-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Bouncy Neo-Brutalist Logo Card */
+.splash-logo-card {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  background: #FFFFFF;
+  border: 4px solid var(--border-dark);
+  border-radius: 26px;
+  box-shadow: 7px 7px 0px var(--border-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  animation: splashLogoPop 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) both,
+             splashLogoFloat 3s ease-in-out infinite 0.9s;
+}
+
+@keyframes splashLogoPop {
+  0% {
+    transform: scale(0.2) rotate(-16deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.14) rotate(4deg);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes splashLogoFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(2deg);
+  }
+}
+
+.splash-logo-img {
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  border-radius: 16px;
+}
+
+.splash-badge-tag {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--border-dark);
+  color: var(--neo-yellow);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 2px solid var(--neo-yellow);
+  box-shadow: 2px 2px 0px var(--border-dark);
+  transform: rotate(12deg);
+  animation: splashBadgeBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s both;
+}
+
+@keyframes splashBadgeBounce {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(12deg);
+    opacity: 1;
+  }
+}
+
+.splash-text-wrap {
+  margin-bottom: 22px;
+}
+
+.splash-title {
+  font-family: var(--font-main);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--border-dark);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+  text-shadow: 3px 3px 0px #FFFFFF;
+  animation: splashSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+.splash-tagline-pill {
+  display: inline-block;
+  background: var(--border-dark);
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 4px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+  box-shadow: 2.5px 2.5px 0px #FFFFFF;
+  animation: splashSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+
+@keyframes splashSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Progress bar */
+.splash-loader-wrap {
+  width: 100%;
+  max-width: 220px;
+  animation: splashSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+
+.splash-progress-bar {
+  width: 100%;
+  height: 14px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--border-dark);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0px var(--border-dark);
+  overflow: hidden;
+  position: relative;
+}
+
+.splash-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: repeating-linear-gradient(
+    -45deg,
+    #0F0F0F,
+    #0F0F0F 8px,
+    #2E2E2E 8px,
+    #2E2E2E 16px
+  );
+  border-radius: 6px;
+  transition: width 0.08s linear;
+}
+
+.splash-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--border-dark);
+}
+
+.splash-tap-hint {
+  margin-top: 24px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: rgba(15, 15, 15, 0.55);
+  letter-spacing: 0.3px;
+  animation: splashFadeIn 0.5s ease 0.7s both;
+}
+
+@keyframes splashFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }

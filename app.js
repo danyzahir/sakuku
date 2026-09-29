@@ -109,8 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- DASHBOARD DOM ELEMENTS ---
   const dashPeriodTitle = document.getElementById('dash-period-title');
   const netBalanceDisplay = document.getElementById('net-balance-display');
+  const dashCardIncome = document.getElementById('dash-card-income');
   const dashIncomeDisplay = document.getElementById('dash-income-display');
   const dashIncomeCount = document.getElementById('dash-income-count');
+  const dashCardExpense = document.getElementById('dash-card-expense');
   const dashExpenseDisplay = document.getElementById('dash-expense-display');
   const dashExpenseCount = document.getElementById('dash-expense-count');
   const dashChartPeriodTag = document.getElementById('dash-chart-period-tag');
@@ -202,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // --- INITIALIZATION ---
+  setupSplashScreen();
   updateClock();
   setInterval(updateClock, 1000);
   updatePickerButtonDisplays();
@@ -215,6 +218,60 @@ document.addEventListener('DOMContentLoaded', () => {
   setupConfirmationModal();
   setupActionListeners();
   renderAllViews();
+
+  // --- NEO-BRUTALIST OPENING / SPLASH SCREEN CONTROLLER ---
+  function setupSplashScreen() {
+    const splashEl = document.getElementById('app-splash-screen');
+    const fillEl = document.getElementById('splash-progress-fill');
+    const statusTextEl = document.getElementById('splash-status-text');
+    const percentEl = document.getElementById('splash-status-percent');
+
+    if (!splashEl) return;
+
+    let isDismissed = false;
+    const duration = 1250; // Durasi total animasi opening yang pas & dynamic
+    const startTime = performance.now();
+
+    function dismissSplash() {
+      if (isDismissed) return;
+      isDismissed = true;
+      splashEl.classList.add('splash-exit');
+      setTimeout(() => {
+        splashEl.style.display = 'none';
+      }, 700);
+    }
+
+    function updateSplash(now) {
+      if (isDismissed) return;
+      const elapsed = now - startTime;
+      const progress = Math.min(100, Math.floor((elapsed / duration) * 100));
+
+      if (fillEl) fillEl.style.width = progress + '%';
+      if (percentEl) percentEl.textContent = progress + '%';
+
+      if (statusTextEl) {
+        if (progress < 35) {
+          statusTextEl.textContent = 'Memuat Dompet...';
+        } else if (progress < 75) {
+          statusTextEl.textContent = 'Menyiapkan Data...';
+        } else {
+          statusTextEl.textContent = 'Siap Cuan!';
+        }
+      }
+
+      if (progress < 100) {
+        requestAnimationFrame(updateSplash);
+      } else {
+        setTimeout(dismissSplash, 260);
+      }
+    }
+
+    // Bisa diklik atau disentuh langsung untuk melewati animasi jika terburu-buru
+    splashEl.addEventListener('click', dismissSplash);
+    splashEl.addEventListener('touchstart', dismissSplash, { passive: true });
+
+    requestAnimationFrame(updateSplash);
+  }
 
   // --- HELPERS: FORMATTING & CLOCK ---
   function updateClock() {
@@ -286,6 +343,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (navVoice) {
       navVoice.addEventListener('click', () => {
         openVoiceModal();
+      });
+    }
+
+    // Card Pendapatan di Dashboard -> Navigasi langsung ke tab Pendapatan
+    if (dashCardIncome) {
+      dashCardIncome.addEventListener('click', () => {
+        switchTab('income');
+      });
+      dashCardIncome.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          switchTab('income');
+        }
+      });
+    }
+
+    // Card Pengeluaran di Dashboard -> Navigasi langsung ke tab Pengeluaran
+    if (dashCardExpense) {
+      dashCardExpense.addEventListener('click', () => {
+        switchTab('expense');
+      });
+      dashCardExpense.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          switchTab('expense');
+        }
       });
     }
   }

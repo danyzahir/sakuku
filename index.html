@@ -6,11 +6,44 @@
   <title>CuanKu! - Catat Keuangan Neo-Brutalisme</title>
   <meta name="description" content="Aplikasi Pencatat Pemasukan dan Pengeluaran Keuangan Harian, Mingguan, dan Bulanan dengan Tampilan Mobile Neo-Brutalism Interaktif.">
   <meta name="theme-color" content="#FFE600">
-  <link rel="icon" type="image/png" href="logo.png">
-  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- Neo-Brutalist Mobile Launch Splash Screen -->
+  <div id="app-splash-screen" class="splash-screen" aria-label="Memuat Aplikasi CuanKu">
+
+    <div class="splash-content">
+      <!-- Logo Card with Spring Animation -->
+      <div class="splash-logo-card">
+        <div class="splash-badge-tag">READY</div>
+        <img src="logo.png" alt="CuanKu Logo" class="splash-logo-img">
+      </div>
+
+      <!-- App Title & Tagline -->
+      <div class="splash-text-wrap">
+        <div class="splash-title">CUANKU!</div>
+        <div class="splash-tagline-pill">Catat Keuangan & Cuan</div>
+      </div>
+
+      <!-- Neo-Brutalist Progress Loader -->
+      <div class="splash-loader-wrap">
+        <div class="splash-progress-bar">
+          <div class="splash-progress-fill" id="splash-progress-fill"></div>
+        </div>
+        <div class="splash-status-row">
+          <span class="splash-status-text" id="splash-status-text">Memuat Dompet...</span>
+          <span class="splash-status-percent" id="splash-status-percent">0%</span>
+        </div>
+      </div>
+      
+      <div class="splash-tap-hint">Ketuk untuk lewati</div>
+    </div>
+  </div>
 
   <!-- Toast Notification Alert (Centered Neo-Brutalist Badge) -->
   <div id="toast" class="toast">
@@ -59,9 +92,9 @@
           <button class="tab-btn" data-period="monthly" role="tab" aria-selected="false" id="dash-tab-monthly">Bulanan</button>
         </div>
 
-        <!-- Dual Mini Hero Grid: Pendapatan vs Pengeluaran -->
+        <!-- Dual Mini Hero Grid: Pendapatan vs Pengeluaran (Bisa Diklik Langsung ke Halaman Terkait) -->
         <div class="dual-hero-grid">
-          <div class="mini-hero mini-hero-income">
+          <div class="mini-hero mini-hero-income clickable-card" id="dash-card-income" role="button" tabindex="0" title="Buka Halaman Pendapatan" aria-label="Buka Halaman Pendapatan">
             <div class="mini-hero-title income-label">
               Pendapatan
             </div>
@@ -69,7 +102,7 @@
             <span class="mini-hero-badge" id="dash-income-count">0 Masuk</span>
           </div>
 
-          <div class="mini-hero mini-hero-expense">
+          <div class="mini-hero mini-hero-expense clickable-card" id="dash-card-expense" role="button" tabindex="0" title="Buka Halaman Pengeluaran" aria-label="Buka Halaman Pengeluaran">
             <div class="mini-hero-title expense-label">
               Pengeluaran
             </div>
