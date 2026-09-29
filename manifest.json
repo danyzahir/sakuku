@@ -1,0 +1,37 @@
+{
+  "name": "CuanKu! - Catat Keuangan Neo-Brutalisme",
+  "short_name": "CuanKu!",
+  "description": "Aplikasi Pencatat Pemasukan dan Pengeluaran Keuangan Harian, Mingguan, dan Bulanan dengan Tampilan Mobile Neo-Brutalism Interaktif.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFE600",
+  "theme_color": "#FFE600",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
