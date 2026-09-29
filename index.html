@@ -49,48 +49,6 @@
       width: 100%;
       max-width: 280px;
     }
-    .splash-logo-card {
-      position: relative;
-      width: 104px;
-      height: 104px;
-      background: #FFFFFF;
-      border: 4px solid #0F0F0F;
-      border-radius: 24px;
-      box-shadow: 6px 6px 0px #0F0F0F;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-    @media (display-mode: standalone) {
-      .splash-logo-card {
-        display: none !important;
-      }
-      .splash-content {
-        max-width: 250px;
-      }
-    }
-    .splash-logo-img {
-      width: 70px;
-      height: 70px;
-      object-fit: contain;
-      border-radius: 16px;
-    }
-    .splash-badge-tag {
-      position: absolute;
-      top: -9px;
-      right: -9px;
-      background: #0F0F0F;
-      color: #FFE600;
-      font-family: monospace;
-      font-size: 0.65rem;
-      font-weight: 900;
-      padding: 3px 8px;
-      border-radius: 20px;
-      border: 2px solid #FFE600;
-      box-shadow: 2px 2px 0px #0F0F0F;
-      transform: rotate(12deg);
-    }
     .splash-title {
       font-size: 2.1rem;
       font-weight: 900;
@@ -150,12 +108,6 @@
   <div id="app-splash-screen" class="splash-screen" style="background-color: #FFE600;" aria-label="Memuat Aplikasi CuanKu">
 
     <div class="splash-content">
-      <!-- Logo Card with Spring Animation -->
-      <div class="splash-logo-card">
-        <div class="splash-badge-tag">READY</div>
-        <img src="logo.png" alt="CuanKu Logo" class="splash-logo-img">
-      </div>
-
       <!-- App Title & Tagline -->
       <div class="splash-text-wrap">
         <div class="splash-title">CUANKU!</div>
