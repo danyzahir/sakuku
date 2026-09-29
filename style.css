@@ -1878,6 +1878,292 @@ body::before {
   box-shadow: 0px 0px 0px var(--border-dark);
 }
 
+/* Voice Pop-up Modal Card */
+.voice-modal-card {
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  max-height: 90dvh;
+  background: var(--bg-card);
+  border: 4px solid var(--border-dark);
+  border-radius: 22px;
+  box-shadow: 10px 10px 0px #000000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  transform: scale(1);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-backdrop.hidden .voice-modal-card {
+  transform: scale(0.88);
+}
+
+.voice-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--neo-purple);
+  color: #FFFFFF;
+  padding: 14px 16px;
+  border-bottom: 3px solid var(--border-dark);
+}
+
+.voice-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.voice-modal-logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--neo-yellow);
+  color: #000;
+  border: 2px solid var(--border-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 0px var(--border-dark);
+}
+
+.voice-modal-title-text {
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: -0.2px;
+  color: #FFFFFF;
+}
+
+.voice-modal-subtitle {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #FFE600;
+}
+
+.voice-modal-close-btn {
+  background: var(--neo-pink);
+  color: #FFF;
+  border: 2px solid var(--border-dark);
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  transition: all 0.1s ease;
+}
+
+.voice-modal-close-btn:hover {
+  transform: scale(1.05);
+}
+
+.voice-modal-close-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--border-dark);
+}
+
+.voice-modal-body {
+  padding: 16px 14px 20px 14px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==========================================================================
+   VOICE DETECTED MODAL POP-UP (PEMASUKAN & PENGELUARAN OTOMATIS)
+   ========================================================================== */
+.detected-modal-card {
+  width: 100%;
+  max-width: 380px;
+  background: #FFFFFF;
+  border: 4px solid var(--border-dark);
+  border-radius: 20px;
+  box-shadow: 10px 10px 0px #000000;
+  padding: 22px 18px;
+  text-align: center;
+  position: relative;
+  transform: scale(1);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-backdrop.hidden .detected-modal-card {
+  transform: scale(0.85);
+}
+
+.detected-header-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-weight: 900;
+  font-size: 0.85rem;
+  border: 2px solid var(--border-dark);
+  box-shadow: 2px 2px 0px var(--border-dark);
+  margin-bottom: 12px;
+}
+
+.detected-modal-card.is-income .detected-header-pill {
+  background: var(--neo-lime);
+  color: var(--border-dark);
+}
+
+.detected-modal-card.is-expense .detected-header-pill {
+  background: var(--neo-pink);
+  color: #FFFFFF;
+}
+
+.detected-amount-display {
+  font-family: var(--font-mono);
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin: 4px 0 14px 0;
+  letter-spacing: -1px;
+}
+
+.detected-modal-card.is-income .detected-amount-display {
+  color: #059669;
+}
+
+.detected-modal-card.is-expense .detected-amount-display {
+  color: #E11D48;
+}
+
+.detected-info-card {
+  background: #FAF8F5;
+  border: 2px solid var(--border-dark);
+  border-radius: 12px;
+  padding: 12px 14px;
+  text-align: left;
+  margin-bottom: 10px;
+  box-shadow: 2px 2px 0px var(--border-dark);
+}
+
+.detected-field-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.detected-field-label {
+  color: #666;
+}
+
+.detected-field-val {
+  font-weight: 900;
+  color: var(--border-dark);
+}
+
+.detected-switch-btn {
+  background: transparent;
+  border: 1.5px dashed var(--border-dark);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+  color: #333;
+  margin-bottom: 12px;
+  width: 100%;
+  transition: all 0.15s ease;
+}
+
+.detected-switch-btn:hover {
+  background: var(--neo-yellow);
+}
+
+.detected-edit-details {
+  margin-bottom: 14px;
+  text-align: left;
+  border: 1.5px solid var(--border-dark);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #FAF8F5;
+}
+
+.detected-edit-summary {
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  color: #444;
+  outline: none;
+}
+
+.detected-edit-inputs {
+  margin-top: 8px;
+}
+
+.detected-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detected-btn-save {
+  width: 100%;
+  padding: 13px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+}
+
+.detected-modal-card.is-income .detected-btn-save {
+  background: var(--neo-lime);
+  color: #000;
+}
+
+.detected-modal-card.is-expense .detected-btn-save {
+  background: var(--neo-pink);
+  color: #FFF;
+}
+
+.detected-secondary-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.btn-detected-retry {
+  background: var(--neo-yellow);
+  border: 2.5px solid var(--border-dark);
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  font-family: var(--font-main);
+  transition: all 0.1s ease;
+}
+
+.btn-detected-retry:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0px 0px 0px var(--border-dark);
+}
+
+.btn-detected-cancel {
+  background: #FFFFFF;
+  border: 2.5px solid var(--border-dark);
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  font-family: var(--font-main);
+  transition: all 0.1s ease;
+}
+
+.btn-detected-cancel:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0px 0px 0px var(--border-dark);
+}
+
 /* Responsive adjustments for all mobile screens */
 @media (max-width: 600px) {
   body {

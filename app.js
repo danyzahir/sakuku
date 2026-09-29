@@ -67,10 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusClock = document.getElementById('status-clock');
   const headerTodayDate = document.getElementById('header-today-date');
 
-  // Tab View Containers
+  // Tab View Containers (4 Halaman Utama)
   const viewDashboard = document.getElementById('view-dashboard');
   const viewIncome = document.getElementById('view-income');
-  const viewVoice = document.getElementById('view-voice');
   const viewExpense = document.getElementById('view-expense');
   const viewNotes = document.getElementById('view-notes');
 
@@ -166,9 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const notesInputSearch = document.getElementById('notes-input-search');
   const notesListContainer = document.getElementById('notes-list-container');
 
-  // --- VOICE VIEW DOM ELEMENTS ---
-  const voiceBtnDatepicker = document.getElementById('voice-btn-datepicker');
-  const voiceDisplaySelectedDate = document.getElementById('voice-display-selected-date');
+  // --- VOICE POP-UP MODAL & DETECTED MODAL DOM ELEMENTS ---
+  const voicePopupModal = document.getElementById('voice-popup-modal');
+  const voiceModalCloseBtn = document.getElementById('voice-modal-close-btn');
   const voiceStatusDot = document.getElementById('voice-status-dot');
   const voiceStatusText = document.getElementById('voice-status-text');
   const btnToggleMic = document.getElementById('btn-toggle-mic');
@@ -177,16 +176,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const voiceWaveContainer = document.getElementById('voice-wave-container');
   const voiceTranscriptText = document.getElementById('voice-transcript-text');
   const btnClearVoice = document.getElementById('btn-clear-voice');
-  const voiceTypeIncome = document.getElementById('voice-type-income');
-  const voiceTypeExpense = document.getElementById('voice-type-expense');
-  const voiceInputName = document.getElementById('voice-input-name');
-  const voiceInputAmount = document.getElementById('voice-input-amount');
-  const voiceBtnSubmit = document.getElementById('voice-btn-submit');
-  const voiceChipBtns = document.querySelectorAll('.voice-chip-btn');
-  let voiceSelectedDate = new Date();
-  let voiceSelectedType = 'expense';
+
+  // Pop-Up Konfirmasi Otomatis (Pemasukan / Pengeluaran)
+  const voiceDetectedModal = document.getElementById('voice-detected-modal');
+  const detectedModalCard = document.getElementById('detected-modal-card');
+  const detectedBadgeIcon = document.getElementById('detected-badge-icon');
+  const detectedBadgeTitle = document.getElementById('detected-badge-title');
+  const detectedAmountDisplay = document.getElementById('detected-amount-display');
+  const detectedNameDisplay = document.getElementById('detected-name-display');
+  const detectedDateDisplay = document.getElementById('detected-date-display');
+  const btnDetectedSwitchType = document.getElementById('btn-detected-switch-type');
+  const detectedEditDetails = document.getElementById('detected-edit-details');
+  const detectedInputName = document.getElementById('detected-input-name');
+  const detectedInputAmount = document.getElementById('detected-input-amount');
+  const btnDetectedSave = document.getElementById('btn-detected-save');
+  const btnDetectedRetry = document.getElementById('btn-detected-retry');
+  const btnDetectedCancel = document.getElementById('btn-detected-cancel');
+
   let isRecording = false;
   let recognitionInstance = null;
+  let currentDetectedTx = {
+    type: 'expense',
+    name: 'Pengeluaran Baru',
+    amount: 0,
+    date: new Date()
+  };
 
   // --- INITIALIZATION ---
   updateClock();
@@ -253,12 +267,11 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
   }
 
-  // --- TAB NAVIGATION SYSTEM (5 TABS DENGAN VOICE DI TENGAH) ---
+  // --- TAB NAVIGATION SYSTEM (4 TAB HALAMAN + TOMBOL VOICE MODAL DI TENGAH) ---
   function setupNavigationTabs() {
     const navItems = [
       { btn: navDashboard, view: viewDashboard, name: 'dashboard' },
       { btn: navIncome, view: viewIncome, name: 'income' },
-      { btn: navVoice, view: viewVoice, name: 'voice' },
       { btn: navExpense, view: viewExpense, name: 'expense' },
       { btn: navNotes, view: viewNotes, name: 'notes' }
     ];
@@ -269,13 +282,39 @@ document.addEventListener('DOMContentLoaded', () => {
         switchTab(item.name);
       });
     });
+
+    // Tombol Voice di tengah: Tidak pindah halaman, tapi buka pop-up modal!
+    if (navVoice) {
+      navVoice.addEventListener('click', () => {
+        openVoiceModal();
+      });
+    }
+  }
+
+  function openVoiceModal() {
+    if (voicePopupModal) {
+      voicePopupModal.classList.remove('hidden');
+    }
+  }
+
+  function closeVoiceModal() {
+    if (voicePopupModal) {
+      voicePopupModal.classList.add('hidden');
+    }
+    if (isRecording && recognitionInstance) {
+      try {
+        recognitionInstance.stop();
+      } catch (err) {
+        console.warn(err);
+      }
+    }
   }
 
   function switchTab(tabName) {
     currentActiveTab = tabName;
 
-    // Update active nav button
-    [navDashboard, navIncome, navVoice, navExpense, navNotes].forEach(btn => {
+    // Update active nav button (halaman tetap pada tab yang dipilih)
+    [navDashboard, navIncome, navExpense, navNotes].forEach(btn => {
       if (!btn) return;
       if (btn.dataset.tab === tabName) {
         btn.classList.add('active');
@@ -288,7 +327,6 @@ document.addEventListener('DOMContentLoaded', () => {
     [
       { view: viewDashboard, name: 'dashboard' },
       { view: viewIncome, name: 'income' },
-      { view: viewVoice, name: 'voice' },
       { view: viewExpense, name: 'expense' },
       { view: viewNotes, name: 'notes' }
     ].forEach(tab => {
@@ -377,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- FORM NUMBER FORMATTING (AUTO RUPIAH SEPARATOR) ---
   function setupFormFormatting() {
-    [incomeInputAmount, expenseInputAmount, voiceInputAmount].forEach(input => {
+    [incomeInputAmount, expenseInputAmount, detectedInputAmount].forEach(input => {
       if (!input) return;
       input.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, '');
@@ -397,9 +435,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (expenseDisplaySelectedDate) {
       expenseDisplaySelectedDate.textContent = formatDisplayDateOnly(expenseSelectedDate);
-    }
-    if (voiceDisplaySelectedDate) {
-      voiceDisplaySelectedDate.textContent = formatDisplayDateOnly(voiceSelectedDate);
     }
     if (notesDisplaySelectedDate) {
       notesDisplaySelectedDate.textContent = formatDisplayDateOnly(notesSelectedDate);
@@ -729,7 +764,14 @@ document.addEventListener('DOMContentLoaded', () => {
             voiceTranscriptText.textContent = `"${currentSpeech}"`;
           }
 
-          if (finalTranscript) {
+          if (finalTranscript && finalTranscript.trim().length > 0) {
+            // Selesai mengucapkan -> Hentikan mic & tutup perekam
+            if (isRecording && recognitionInstance) {
+              try { recognitionInstance.stop(); } catch (err) {}
+            }
+            closeVoiceModal();
+
+            // Langsung munculkan pop-up pemasukan / pengeluaran sesuai ucapan!
             processVoiceInput(finalTranscript);
           }
         };
@@ -757,7 +799,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       if (voiceStatusText) {
-        voiceStatusText.textContent = 'Browser belum mendukung mic. Gunakan contoh ucapan di bawah!';
+        voiceStatusText.textContent = 'Browser belum mendukung Web Speech API (Gunakan Chrome/Edge/Android)';
       }
     }
 
@@ -777,6 +819,9 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         } else {
           try {
+            if (voiceTranscriptText) {
+              voiceTranscriptText.textContent = '"Mendengarkan suara Anda..."';
+            }
             recognitionInstance.start();
           } catch (e) {
             console.warn('Mic restart attempt:', e);
@@ -797,97 +842,181 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnClearVoice) {
       btnClearVoice.addEventListener('click', () => {
         if (voiceTranscriptText) {
-          voiceTranscriptText.textContent = '"Belum ada suara terdeteksi. Silakan ketuk mikrofon di atas..."';
+          voiceTranscriptText.textContent = '"Silakan ketuk mikrofon di atas dan sebutkan transaksi Anda..."';
         }
-        if (voiceInputName) voiceInputName.value = '';
-        if (voiceInputAmount) voiceInputAmount.value = '';
         showToast('Hasil ucapan dibersihkan');
       });
     }
 
-    // Type Switcher (Income vs Expense)
-    if (voiceTypeIncome) {
-      voiceTypeIncome.addEventListener('click', () => {
-        setVoiceType('income');
-      });
+    // Modal Close Button & Backdrop Click Listeners
+    if (voiceModalCloseBtn) {
+      voiceModalCloseBtn.addEventListener('click', closeVoiceModal);
     }
 
-    if (voiceTypeExpense) {
-      voiceTypeExpense.addEventListener('click', () => {
-        setVoiceType('expense');
-      });
-    }
-
-    // Datepicker trigger for Voice
-    if (voiceBtnDatepicker) {
-      voiceBtnDatepicker.addEventListener('click', () => {
-        currentDatePickerTarget = 'voice';
-        calendarViewDate = new Date(voiceSelectedDate);
-        renderCalendar();
-        neoDatepickerModal.classList.remove('hidden');
-      });
-    }
-
-    // Voice quick chip samples
-    voiceChipBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const sampleText = btn.dataset.sample;
-        if (sampleText) {
-          if (voiceTranscriptText) {
-            voiceTranscriptText.textContent = `"${sampleText}"`;
-          }
-          processVoiceInput(sampleText);
-          showToast('Suara contoh diproses! ⚡');
+    if (voicePopupModal) {
+      voicePopupModal.addEventListener('click', (e) => {
+        if (e.target === voicePopupModal) {
+          closeVoiceModal();
         }
       });
-    });
+    }
 
-    // Submit Voice Transaction Button
-    if (voiceBtnSubmit) {
-      voiceBtnSubmit.addEventListener('click', () => {
-        const name = voiceInputName.value.trim();
-        const rawAmount = voiceInputAmount.value.replace(/\D/g, '');
-        const amount = parseInt(rawAmount, 10);
+    // --- SETUP DETECTED POP-UP LISTENERS ---
+    setupDetectedModalListeners();
+  }
+
+  function setupDetectedModalListeners() {
+    // Switch Tipe Transaksi (Pemasukan <-> Pengeluaran)
+    if (btnDetectedSwitchType) {
+      btnDetectedSwitchType.addEventListener('click', () => {
+        currentDetectedTx.type = currentDetectedTx.type === 'income' ? 'expense' : 'income';
+        openVoiceDetectedModal();
+      });
+    }
+
+    // Sinkronkan input nama koreksi secara real-time
+    if (detectedInputName) {
+      detectedInputName.addEventListener('input', (e) => {
+        currentDetectedTx.name = e.target.value.trim();
+        if (detectedNameDisplay) {
+          detectedNameDisplay.textContent = currentDetectedTx.name || '-';
+        }
+      });
+    }
+
+    // Sinkronkan input nominal koreksi secara real-time
+    if (detectedInputAmount) {
+      detectedInputAmount.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value) {
+          e.target.value = new Intl.NumberFormat('id-ID').format(value);
+          currentDetectedTx.amount = parseInt(value, 10);
+        } else {
+          e.target.value = '';
+          currentDetectedTx.amount = 0;
+        }
+        if (detectedAmountDisplay) {
+          detectedAmountDisplay.textContent = formatRupiah(currentDetectedTx.amount);
+        }
+      });
+    }
+
+    // Simpan Transaksi Otomatis
+    if (btnDetectedSave) {
+      btnDetectedSave.addEventListener('click', () => {
+        const name = (detectedInputName ? detectedInputName.value.trim() : '') || currentDetectedTx.name || 'Transaksi';
+        const rawAmount = detectedInputAmount ? detectedInputAmount.value.replace(/\D/g, '') : '';
+        const amount = parseInt(rawAmount, 10) || currentDetectedTx.amount;
 
         if (!name || isNaN(amount) || amount <= 0) {
-          showToast('⚠️ Lengkapi keterangan & nominal!');
+          showToast('⚠️ Masukkan nominal transaksi!');
+          if (detectedEditDetails) detectedEditDetails.open = true;
+          if (detectedInputAmount) detectedInputAmount.focus();
           return;
         }
 
-        const txDate = voiceSelectedDate || new Date();
-        const isIncome = voiceSelectedType === 'income';
+        const isIncome = currentDetectedTx.type === 'income';
         const newTx = {
           id: (isIncome ? 'tx_inc_' : 'tx_exp_') + Date.now(),
           type: isIncome ? 'income' : 'expense',
           name: name,
           amount: amount,
-          timestamp: txDate.toISOString(),
-          displayDate: formatDisplayDateOnly(txDate)
+          timestamp: (currentDetectedTx.date || new Date()).toISOString(),
+          displayDate: formatDisplayDateOnly(currentDetectedTx.date || new Date())
         };
 
         transactions.unshift(newTx);
         saveTransactions();
-
-        // Reset Voice Form
-        voiceInputName.value = '';
-        voiceInputAmount.value = '';
-        voiceSelectedDate = new Date();
-        updatePickerButtonDisplays();
-
         renderAllViews();
+
         showToast(isIncome ? 'Pemasukan Ditambahkan via Voice! 💰' : 'Pengeluaran Dicatat via Voice! 💸');
+        closeVoiceDetectedModal();
+      });
+    }
+
+    // Tombol Bicara Lagi
+    if (btnDetectedRetry) {
+      btnDetectedRetry.addEventListener('click', () => {
+        closeVoiceDetectedModal();
+        openVoiceModal();
+        // Otomatis mulai merekam kembali
+        setTimeout(() => {
+          if (btnToggleMic && recognitionInstance && !isRecording) {
+            try { recognitionInstance.start(); } catch (err) {}
+          }
+        }, 300);
+      });
+    }
+
+    // Tombol Batal & Backdrop Click
+    if (btnDetectedCancel) {
+      btnDetectedCancel.addEventListener('click', closeVoiceDetectedModal);
+    }
+
+    if (voiceDetectedModal) {
+      voiceDetectedModal.addEventListener('click', (e) => {
+        if (e.target === voiceDetectedModal) {
+          closeVoiceDetectedModal();
+        }
       });
     }
   }
 
-  function setVoiceType(type) {
-    voiceSelectedType = type;
-    if (type === 'income') {
-      if (voiceTypeIncome) voiceTypeIncome.classList.add('active');
-      if (voiceTypeExpense) voiceTypeExpense.classList.remove('active');
-    } else {
-      if (voiceTypeExpense) voiceTypeExpense.classList.add('active');
-      if (voiceTypeIncome) voiceTypeIncome.classList.remove('active');
+  function openVoiceDetectedModal() {
+    if (!voiceDetectedModal) return;
+
+    const isIncome = currentDetectedTx.type === 'income';
+
+    if (detectedModalCard) {
+      detectedModalCard.className = `detected-modal-card ${isIncome ? 'is-income' : 'is-expense'}`;
+    }
+
+    if (detectedBadgeIcon) {
+      detectedBadgeIcon.textContent = isIncome ? '💰' : '💸';
+    }
+
+    if (detectedBadgeTitle) {
+      detectedBadgeTitle.textContent = isIncome ? 'PEMASUKAN TERDETEKSI' : 'PENGELUARAN TERDETEKSI';
+    }
+
+    if (btnDetectedSwitchType) {
+      btnDetectedSwitchType.textContent = isIncome ? '⇄ Ganti ke Pengeluaran' : '⇄ Ganti ke Pemasukan';
+    }
+
+    if (btnDetectedSave) {
+      btnDetectedSave.textContent = isIncome ? 'SIMPAN PEMASUKAN' : 'SIMPAN PENGELUARAN';
+    }
+
+    if (detectedAmountDisplay) {
+      detectedAmountDisplay.textContent = formatRupiah(currentDetectedTx.amount || 0);
+    }
+
+    if (detectedNameDisplay) {
+      detectedNameDisplay.textContent = currentDetectedTx.name || '-';
+    }
+
+    if (detectedDateDisplay) {
+      detectedDateDisplay.textContent = formatDisplayDateOnly(currentDetectedTx.date || new Date());
+    }
+
+    if (detectedInputName) {
+      detectedInputName.value = currentDetectedTx.name || '';
+    }
+
+    if (detectedInputAmount) {
+      detectedInputAmount.value = currentDetectedTx.amount > 0 ? new Intl.NumberFormat('id-ID').format(currentDetectedTx.amount) : '';
+    }
+
+    if (detectedEditDetails) {
+      detectedEditDetails.open = false;
+    }
+
+    voiceDetectedModal.classList.remove('hidden');
+  }
+
+  function closeVoiceDetectedModal() {
+    if (voiceDetectedModal) {
+      voiceDetectedModal.classList.add('hidden');
     }
   }
 
@@ -919,18 +1048,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Deteksi Tipe (Income vs Expense)
     const detectedType = detectTransactionType(cleanText);
-    setVoiceType(detectedType);
 
     // 3. Ekstrak Nama / Keterangan Transaksi
     const extractedName = extractTransactionTitle(cleanText, detectedType);
 
-    // Isi ke Input Form
-    if (voiceInputName && extractedName) {
-      voiceInputName.value = extractedName;
-    }
-    if (voiceInputAmount && parsedAmount > 0) {
-      voiceInputAmount.value = new Intl.NumberFormat('id-ID').format(parsedAmount);
-    }
+    // Simpan ke state detected tx
+    currentDetectedTx = {
+      type: detectedType,
+      name: extractedName,
+      amount: parsedAmount,
+      date: new Date()
+    };
+
+    // Buka pop-up konfirmasi pemasukan / pengeluaran otomatis!
+    openVoiceDetectedModal();
   }
 
   function detectTransactionType(text) {

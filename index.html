@@ -303,157 +303,6 @@
       </section>
 
       <!-- ================================================================ -->
-      <!-- TAB VOICE: CATAT TRANSAKSI DENGAN SUARA (PENDAPATAN & PENGELUARAN) -->
-      <!-- ================================================================ -->
-      <section id="view-voice" class="tab-view hidden">
-        
-        <!-- Voice Assistant Hero Card -->
-        <div class="voice-hero">
-          <div class="hero-logo-badge">
-            <img src="logo.png" alt="CuanKu Logo Icon">
-          </div>
-          <div class="voice-hero-tag">AI / SMART VOICE INPUT</div>
-          <div class="hero-label">Menu Voice CuanKu</div>
-          <div class="voice-hero-title">Catat Transaksi Suara</div>
-          <p class="voice-hero-desc">Bicara langsung! Sistem otomatis mendeteksi pendapatan atau pengeluaran dan nominalnya.</p>
-          <div class="voice-status-pill" id="voice-status-pill">
-            <span class="status-indicator-dot" id="voice-status-dot"></span>
-            <span id="voice-status-text">Siap mendengarkan suara Anda</span>
-          </div>
-        </div>
-
-        <!-- Big Voice Action Neo-Card -->
-        <div class="neo-card voice-action-card">
-          <div class="mic-button-wrapper">
-            <div class="mic-pulse-ring" id="mic-pulse-ring"></div>
-            <button type="button" class="btn-big-mic" id="btn-toggle-mic" title="Ketuk untuk Mulai/Berhenti Bicara">
-              <svg class="mic-icon" id="mic-icon-svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                <line x1="12" x2="12" y1="19" y2="22"/>
-              </svg>
-            </button>
-          </div>
-          <div class="mic-prompt-label" id="mic-prompt-label">Ketuk mikrofon untuk mulai bicara</div>
-
-          <!-- Soundwave Animation Visualizer Bars -->
-          <div class="voice-wave-container" id="voice-wave-container">
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-          </div>
-
-          <!-- Live Transcript Card -->
-          <div class="voice-transcript-box">
-            <div class="transcript-header">
-              <span class="transcript-title">Hasil Ucapan:</span>
-              <button type="button" class="btn-clear-transcript" id="btn-clear-voice" title="Bersihkan teks">Bersihkan</button>
-            </div>
-            <div class="transcript-content" id="voice-transcript-text">
-              "Belum ada suara terdeteksi. Silakan ketuk mikrofon di atas dan ucapkan pengeluaran atau pendapatan Anda..."
-            </div>
-          </div>
-        </div>
-
-        <!-- Smart Extracted Form Card (Hasil Ekstraksi & Konfirmasi Cepat) -->
-        <div class="neo-card voice-result-card" id="voice-result-card">
-          <div class="section-title" style="justify-content: space-between;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>Konfirmasi Hasil Suara</span>
-            </div>
-            <span class="title-tag" id="voice-detection-confidence">SIAP DISIMPAN</span>
-          </div>
-
-          <!-- Type Switcher (Auto-Selected by voice, but toggleable) -->
-          <div class="voice-type-switcher">
-            <button type="button" class="voice-type-btn" id="voice-type-income" data-type="income">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-              Pendapatan (Masuk)
-            </button>
-            <button type="button" class="voice-type-btn active" id="voice-type-expense" data-type="expense">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
-              Pengeluaran (Keluar)
-            </button>
-          </div>
-
-          <!-- Date Picker Button for Voice -->
-          <div class="form-group">
-            <label class="form-label" style="display:flex; align-items:center; gap:6px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-              Tanggal Transaksi
-            </label>
-            <button type="button" class="datepicker-trigger-btn" id="voice-btn-datepicker">
-              <span id="voice-display-selected-date">Hari Ini</span>
-              <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; background:var(--neo-yellow); border:1.5px solid #000; padding:2px 8px; border-radius:6px; font-weight:800; box-shadow:1px 1px 0px #000;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                PILIH
-              </span>
-            </button>
-          </div>
-
-          <!-- Extracted Title/Name Input -->
-          <div class="form-group">
-            <label for="voice-input-name" class="form-label" style="display:flex; align-items:center; gap:6px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
-              Keterangan / Nama Transaksi
-            </label>
-            <input type="text" id="voice-input-name" class="form-input" placeholder="Cth: Beli Bensin, Gaji Kantor, Makan Siang..." autocomplete="off">
-          </div>
-
-          <!-- Extracted Amount Input -->
-          <div class="form-group">
-            <label for="voice-input-amount" class="form-label" style="display:flex; align-items:center; gap:6px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              Nominal (Rp)
-            </label>
-            <input type="text" id="voice-input-amount" class="form-input" placeholder="0" inputmode="numeric" autocomplete="off">
-          </div>
-
-          <!-- Submit Button -->
-          <button type="button" class="btn-neo" id="voice-btn-submit" style="background-color: var(--neo-lime);">
-            SIMPAN TRANSAKSI SUARA
-          </button>
-        </div>
-
-        <!-- Examples & Voice Guide Card -->
-        <div class="neo-card voice-tips-card">
-          <div class="section-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
-            <span>Contoh Ucapan yang Dikenali</span>
-          </div>
-          <p style="font-size:0.8rem; color:#555; margin-bottom:12px; font-weight:600;">
-            Klik salah satu contoh di bawah untuk langsung mencoba atau simulasi:
-          </p>
-          <div class="voice-chips-grid">
-            <button type="button" class="voice-chip-btn" data-sample="Beli bensin pertalite 35 ribu">
-              ⛽ "Beli bensin pertalite 35 ribu"
-            </button>
-            <button type="button" class="voice-chip-btn" data-sample="Gaji kantor 5 juta">
-              💼 "Gaji kantor 5 juta"
-            </button>
-            <button type="button" class="voice-chip-btn" data-sample="Makan bakso dan es teh 25 ribu">
-              🍜 "Makan bakso dan es teh 25 ribu"
-            </button>
-            <button type="button" class="voice-chip-btn" data-sample="Dapat bonus freelance 750 ribu">
-              🎁 "Dapat bonus freelance 750 ribu"
-            </button>
-            <button type="button" class="voice-chip-btn" data-sample="Beli kopi susu 18k">
-              ☕ "Beli kopi susu 18k"
-            </button>
-            <button type="button" class="voice-chip-btn" data-sample="Bayar tagihan listrik 150 ribu">
-              ⚡ "Bayar tagihan listrik 150 ribu"
-            </button>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- ================================================================ -->
       <!-- TAB 3: PENGELUARAN (SISTEM CATAT & RIWAYAT PENGELUARAN LENGKAP) -->
       <!-- ================================================================ -->
       <section id="view-expense" class="tab-view hidden">
@@ -656,7 +505,7 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
         <span>Pendapatan</span>
       </button>
-      <button class="nav-item nav-item-voice" id="nav-voice" data-tab="voice">
+      <button class="nav-item nav-item-voice" id="nav-voice" type="button" title="Catat Cepat Pakai Suara">
         <div class="nav-voice-bubble">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
         </div>
@@ -723,6 +572,127 @@
 
       <div class="dp-days-grid" id="dp-days-grid">
         <!-- Generated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Neo-Brutalist Voice Assistant Pop-Up Modal -->
+  <div id="voice-popup-modal" class="modal-backdrop hidden">
+    <div class="voice-modal-card">
+      <div class="voice-modal-header">
+        <div class="voice-modal-title">
+          <div class="voice-modal-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+          </div>
+          <div>
+            <div class="voice-modal-title-text">CATAT SUARA CUANKU</div>
+            <div class="voice-modal-subtitle">Bicara bebas untuk catat pendapatan & belanja</div>
+          </div>
+        </div>
+        <button type="button" class="voice-modal-close-btn" id="voice-modal-close-btn" title="Tutup Pop-up">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="voice-modal-body">
+        <!-- Voice Status Pill -->
+        <div class="voice-status-pill" id="voice-status-pill" style="margin-bottom: 12px; width: 100%; justify-content: center;">
+          <span class="status-indicator-dot" id="voice-status-dot"></span>
+          <span id="voice-status-text">Siap mendengarkan suara Anda</span>
+        </div>
+
+        <!-- Big Voice Action Area (Perekam Suara) -->
+        <div class="neo-card voice-action-card" style="padding: 24px 16px; margin-bottom: 0;">
+          <div class="mic-button-wrapper" style="margin: 6px auto 14px auto;">
+            <div class="mic-pulse-ring" id="mic-pulse-ring"></div>
+            <button type="button" class="btn-big-mic" id="btn-toggle-mic" title="Ketuk untuk Mulai/Berhenti Bicara">
+              <svg class="mic-icon" id="mic-icon-svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" x2="12" y1="19" y2="22"/>
+              </svg>
+            </button>
+          </div>
+          <div class="mic-prompt-label" id="mic-prompt-label" style="font-size:0.95rem; margin-bottom:12px;">Ketuk mikrofon untuk mulai bicara</div>
+
+          <!-- Soundwave Animation Visualizer Bars -->
+          <div class="voice-wave-container" id="voice-wave-container" style="height:28px; margin-bottom:14px;">
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+          </div>
+
+          <!-- Live Transcript Card -->
+          <div class="voice-transcript-box" style="padding: 14px 16px;">
+            <div class="transcript-header">
+              <span class="transcript-title">Ucapan Anda:</span>
+              <button type="button" class="btn-clear-transcript" id="btn-clear-voice" title="Bersihkan teks">Bersihkan</button>
+            </div>
+            <div class="transcript-content" id="voice-transcript-text" style="font-size:0.95rem; min-height:44px; color:var(--border-dark);">
+              "Silakan ketuk mikrofon di atas dan sebutkan transaksi Anda..."
+            </div>
+          </div>
+
+          <div style="font-size:0.75rem; color:#666; font-weight:700; margin-top:14px; text-align:center;">
+            💡 Contoh: <i>"Beli bensin 30 ribu"</i> atau <i>"Gaji kantor 5 juta"</i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Pop-Up Modal Konfirmasi Otomatis Sesuai Voice (Pemasukan / Pengeluaran) -->
+  <div id="voice-detected-modal" class="modal-backdrop hidden">
+    <div class="detected-modal-card" id="detected-modal-card">
+      <div class="detected-header-pill" id="detected-header-pill">
+        <span id="detected-badge-icon" style="font-size:1.2rem;">💸</span>
+        <span id="detected-badge-title">PENGELUARAN TERDETEKSI</span>
+      </div>
+
+      <div class="detected-amount-display" id="detected-amount-display">Rp 0</div>
+
+      <div class="detected-info-card">
+        <div class="detected-field-row">
+          <span class="detected-field-label">Keterangan:</span>
+          <span class="detected-field-val" id="detected-name-display">-</span>
+        </div>
+        <div class="detected-field-row" style="margin-top:6px; border-top:1.5px dashed #000; padding-top:6px;">
+          <span class="detected-field-label">Tanggal:</span>
+          <span class="detected-field-val" id="detected-date-display">Hari ini</span>
+        </div>
+      </div>
+
+      <!-- Quick Switch Type Button -->
+      <button type="button" class="detected-switch-btn" id="btn-detected-switch-type">
+        ⇄ Ganti ke Pemasukan
+      </button>
+
+      <!-- Quick Edit Accordion (Jika ada kesalahan dengar) -->
+      <details class="detected-edit-details" id="detected-edit-details">
+        <summary class="detected-edit-summary">✏️ Koreksi Keterangan / Nominal</summary>
+        <div class="detected-edit-inputs">
+          <input type="text" id="detected-input-name" class="form-input" placeholder="Keterangan transaksi" style="padding: 8px 10px; font-size: 0.85rem; margin-bottom: 8px;" autocomplete="off">
+          <input type="text" id="detected-input-amount" class="form-input" placeholder="Nominal Rp" inputmode="numeric" style="padding: 8px 10px; font-size: 0.85rem;" autocomplete="off">
+        </div>
+      </details>
+
+      <div class="detected-actions">
+        <button type="button" class="btn-neo detected-btn-save" id="btn-detected-save">
+          SIMPAN TRANSAKSI
+        </button>
+        <div class="detected-secondary-actions">
+          <button type="button" class="btn-detected-retry" id="btn-detected-retry">
+            🎙️ Bicara Lagi
+          </button>
+          <button type="button" class="btn-detected-cancel" id="btn-detected-cancel">
+            Batal
+          </button>
+        </div>
       </div>
     </div>
   </div>
