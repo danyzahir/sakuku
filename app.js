@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!splashEl) return;
 
     let isDismissed = false;
-    const duration = 1250; // Durasi total animasi opening yang pas & dynamic
+    const duration = 380; // Langsung loading instan & mulus
     const startTime = performance.now();
 
     function dismissSplash() {
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
       splashEl.classList.add('splash-exit');
       setTimeout(() => {
         splashEl.style.display = 'none';
-      }, 700);
+      }, 400);
     }
 
     function updateSplash(now) {
@@ -250,19 +250,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (percentEl) percentEl.textContent = progress + '%';
 
       if (statusTextEl) {
-        if (progress < 35) {
-          statusTextEl.textContent = 'Memuat Dompet...';
-        } else if (progress < 75) {
-          statusTextEl.textContent = 'Menyiapkan Data...';
+        if (progress < 85) {
+          statusTextEl.textContent = 'Memuat Data...';
         } else {
-          statusTextEl.textContent = 'Siap Cuan!';
+          statusTextEl.textContent = 'Siap!';
         }
       }
 
       if (progress < 100) {
         requestAnimationFrame(updateSplash);
       } else {
-        setTimeout(dismissSplash, 260);
+        setTimeout(dismissSplash, 80);
       }
     }
 
