@@ -229,7 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!splashEl) return;
 
     let isDismissed = false;
-    const duration = 380; // Langsung loading instan & mulus
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                         window.navigator.standalone === true ||
+                         document.referrer.includes('android-app://');
+    const duration = isStandalone ? 150 : 380;
     const startTime = performance.now();
 
     function dismissSplash() {

@@ -1987,6 +1987,17 @@ body::before {
   margin-bottom: 16px;
 }
 
+/* Saat di-install jadi aplikasi Android (WebAPK), sistem Android sudah menampilkan logo di awal.
+   Maka di dalam web kita sembunyikan logo dobel agar langsung progress bar loading */
+@media (display-mode: standalone) {
+  .splash-logo-card {
+    display: none !important;
+  }
+  .splash-content {
+    max-width: 250px;
+  }
+}
+
 .splash-logo-img {
   width: 70px;
   height: 70px;
