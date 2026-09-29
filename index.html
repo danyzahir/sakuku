@@ -14,9 +14,6 @@
 
   <!-- Toast Notification Alert (Centered Neo-Brutalist Badge) -->
   <div id="toast" class="toast">
-    <div class="toast-icon-badge">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-    </div>
     <span id="toast-text">Pemasukan Ditambahkan!</span>
   </div>
 
@@ -50,10 +47,7 @@
           <div class="hero-label" id="dash-period-title">Saldo Bersih (Semua)</div>
           <div class="hero-amount" id="net-balance-display">Rp 0</div>
           <div class="hero-footer" style="justify-content: flex-end;">
-            <span id="hero-subtext" style="display:inline-flex; align-items:center; gap:4px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-              Auto Real-time
-            </span>
+            <span id="hero-subtext">Real-time</span>
           </div>
         </div>
 
@@ -69,7 +63,6 @@
         <div class="dual-hero-grid">
           <div class="mini-hero mini-hero-income">
             <div class="mini-hero-title income-label">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
               Pendapatan
             </div>
             <div class="mini-hero-amount income-amount" id="dash-income-display">Rp 0</div>
@@ -78,7 +71,6 @@
 
           <div class="mini-hero mini-hero-expense">
             <div class="mini-hero-title expense-label">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
               Pengeluaran
             </div>
             <div class="mini-hero-amount expense-amount" id="dash-expense-display">Rp 0</div>
@@ -89,22 +81,15 @@
         <!-- Grouped Neo-Brutalist Visual Bar Chart: 12 Bulan (Pendapatan vs Pengeluaran) -->
         <div class="chart-box">
           <div class="section-title" style="justify-content: space-between;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
-              Grafik 12 Bulan
-            </div>
+            <div>Grafik 12 Bulan</div>
             <span class="title-tag" id="dash-chart-period-tag">2026</span>
           </div>
 
           <!-- Year Navigator Bar -->
           <div class="chart-year-nav">
-            <button type="button" class="chart-year-btn" id="chart-prev-year" title="Tahun Sebelumnya">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
+            <button type="button" class="chart-year-btn" id="chart-prev-year" title="Tahun Sebelumnya">«</button>
             <span class="chart-year-label" id="chart-year-display">Tahun 2026</span>
-            <button type="button" class="chart-year-btn" id="chart-next-year" title="Tahun Berikutnya">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
+            <button type="button" class="chart-year-btn" id="chart-next-year" title="Tahun Berikutnya">»</button>
           </div>
 
           <!-- Month Selector Chips (Semua + 12 Bulan) -->
@@ -149,7 +134,6 @@
         <!-- Rasio Beban Pengeluaran Card -->
         <div class="ratio-card">
           <div class="section-title" style="margin-bottom:6px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
             Rasio Keuangan
           </div>
           <div class="ratio-bar-wrap">
@@ -157,8 +141,8 @@
             <div class="ratio-segment-savings" id="ratio-savings-bar" style="width: 100%;" title="Sisa Tabungan"></div>
           </div>
           <div class="ratio-meta">
-            <span style="color:#BE123C;" id="ratio-expense-text">Pengeluaran: 0%</span>
-            <span style="color:#047857;" id="ratio-savings-text">Sisa Saldo: 100%</span>
+            <span id="ratio-expense-text">Pengeluaran: 0%</span>
+            <span id="ratio-savings-text">Sisa Saldo: 100%</span>
           </div>
         </div>
 
@@ -166,21 +150,18 @@
         <div class="stats-grid">
           <div class="stat-item">
             <div class="stat-label">Rata-Rata Pendapatan</div>
-            <div class="stat-val" id="dash-stat-avg-income" style="color:#059669;">Rp 0</div>
+            <div class="stat-val" id="dash-stat-avg-income">Rp 0</div>
           </div>
           <div class="stat-item">
             <div class="stat-label">Rata-Rata Belanja</div>
-            <div class="stat-val" id="dash-stat-avg-expense" style="color:#E11D48;">Rp 0</div>
+            <div class="stat-val" id="dash-stat-avg-expense">Rp 0</div>
           </div>
         </div>
 
         <!-- Recent Combined Activity -->
         <div class="neo-card">
           <div class="section-title" style="justify-content: space-between;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-              Aktivitas Terkini
-            </div>
+            <div>Aktivitas Terkini</div>
             <span class="title-tag" id="dash-recent-count-tag">5 TERAKHIR</span>
           </div>
           <div class="tx-list" id="dash-recent-list">
@@ -204,10 +185,7 @@
           <div class="hero-amount" id="income-hero-amount">Rp 0</div>
           <div class="hero-footer">
             <span class="hero-badge" id="income-tx-count-badge">0 Transaksi Masuk</span>
-            <span style="display:inline-flex; align-items:center; gap:4px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-              Cuan Masuk
-            </span>
+            <span>Cuan Masuk</span>
           </div>
         </div>
 
@@ -234,30 +212,24 @@
         <!-- Form Add Income Section -->
         <div class="neo-card neo-card-yellow">
           <div class="section-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
             Tambah Pendapatan
           </div>
           
           <form id="income-form">
             <!-- Date Picker Trigger for Income -->
             <div class="form-group">
-              <label class="form-label" style="display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M12 14v2l1 1"/></svg>
+              <label class="form-label">
                 Pilih Tanggal Pendapatan
               </label>
               <button type="button" id="income-btn-datepicker" class="form-input" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; background:#FFF; text-align:left; user-select:none;">
                 <span id="income-display-selected-date" style="font-family:var(--font-mono); font-weight:700; font-size:0.95rem;">Hari Ini</span>
-                <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; background:var(--neo-cyan); border:1.5px solid #000; padding:2px 8px; border-radius:6px; font-weight:800; box-shadow:1px 1px 0px #000;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                  PILIH
-                </span>
+                <span class="datepicker-pill-tag">PILIH</span>
               </button>
             </div>
 
             <!-- Nama / Sumber Pendapatan -->
             <div class="form-group">
-              <label for="income-input-name" class="form-label" style="display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+              <label for="income-input-name" class="form-label">
                 Sumber / Keterangan Pendapatan
               </label>
               <input type="text" id="income-input-name" class="form-input" placeholder="Cth: Gaji Pokok, Freelance, Bonus, Dividen..." required autocomplete="off">
@@ -265,8 +237,7 @@
 
             <!-- Nominal Amount Input -->
             <div class="form-group">
-              <label for="income-input-amount" class="form-label" style="display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+              <label for="income-input-amount" class="form-label">
                 Nominal Pendapatan (Rp)
               </label>
               <input type="text" id="income-input-amount" class="form-input" placeholder="Cth: 2.500.000" required inputmode="numeric">
@@ -282,16 +253,15 @@
         <!-- Income Transactions Section -->
         <div class="neo-card">
           <div class="section-title" style="justify-content: space-between;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+            <div>
               Riwayat Pendapatan <span class="title-tag" id="income-filter-tag">SEMUA</span>
             </div>
-            <button id="income-btn-clear-all" style="background:transparent; border:none; color:#FF5277; font-weight:800; font-size:0.75rem; cursor:pointer; text-decoration:underline;">Clear All</button>
+            <button id="income-btn-clear-all" class="btn-clear-all-link">Clear All</button>
           </div>
 
           <!-- Search Filter Box -->
           <div class="form-group" style="margin-bottom:12px;">
-            <input type="text" id="income-input-search" class="form-input" style="padding: 8px 12px; font-size:0.85rem;" placeholder="🔍 Cari riwayat pendapatan...">
+            <input type="text" id="income-input-search" class="form-input" style="padding: 8px 12px; font-size:0.85rem;" placeholder="Cari riwayat pendapatan...">
           </div>
 
           <!-- Income Transaction List Container -->
@@ -307,7 +277,7 @@
       <!-- ================================================================ -->
       <section id="view-expense" class="tab-view hidden">
         
-        <!-- Total Expense Hero Card (Neo-Pink Theme) -->
+        <!-- Total Expense Hero Card -->
         <div class="expense-hero">
           <div class="hero-logo-badge">
             <img src="logo.png" alt="CuanKu Logo Icon">
@@ -316,10 +286,7 @@
           <div class="hero-amount" id="expense-hero-amount">Rp 0</div>
           <div class="hero-footer">
             <span class="hero-badge" id="expense-tx-count-badge">0 Transaksi Keluar</span>
-            <span style="display:inline-flex; align-items:center; gap:4px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
-              Uang Keluar
-            </span>
+            <span>Uang Keluar</span>
           </div>
         </div>
 
@@ -335,41 +302,35 @@
         <div class="stats-grid">
           <div class="stat-item">
             <div class="stat-label">Rata-Rata Belanja</div>
-            <div class="stat-val" id="expense-stat-avg" style="color:#E11D48;">Rp 0</div>
+            <div class="stat-val" id="expense-stat-avg">Rp 0</div>
           </div>
           <div class="stat-item">
             <div class="stat-label">Pengeluaran Tertinggi</div>
-            <div class="stat-val" id="expense-stat-max" style="color:#E11D48;">Rp 0</div>
+            <div class="stat-val" id="expense-stat-max">Rp 0</div>
           </div>
         </div>
 
         <!-- Form Add Expense Section -->
-        <div class="neo-card" style="background:#FFF0F2; border-color:#0F0F0F;">
-          <div class="section-title" style="color:#BE123C;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+        <div class="neo-card" style="background:#FFFFFF; border-color:#0F0F0F;">
+          <div class="section-title">
             Tambah Pengeluaran
           </div>
           
           <form id="expense-form">
             <!-- Date Picker Trigger for Expense -->
             <div class="form-group">
-              <label class="form-label" style="display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M12 14v2l1 1"/></svg>
+              <label class="form-label">
                 Pilih Tanggal Pengeluaran
               </label>
               <button type="button" id="expense-btn-datepicker" class="form-input" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; background:#FFF; text-align:left; user-select:none;">
                 <span id="expense-display-selected-date" style="font-family:var(--font-mono); font-weight:700; font-size:0.95rem;">Hari Ini</span>
-                <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; background:var(--neo-pink); color:#FFF; border:1.5px solid #000; padding:2px 8px; border-radius:6px; font-weight:800; box-shadow:1px 1px 0px #000;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                  PILIH
-                </span>
+                <span class="datepicker-pill-tag">PILIH</span>
               </button>
             </div>
 
             <!-- Nama / Keperluan Pengeluaran -->
             <div class="form-group">
-              <label for="expense-input-name" class="form-label" style="display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+              <label for="expense-input-name" class="form-label">
                 Keperluan / Nama Pengeluaran
               </label>
               <input type="text" id="expense-input-name" class="form-input" placeholder="Cth: Makan Siang, Bensin Motor, Belanja Bulanan, Listrik..." required autocomplete="off">
@@ -377,8 +338,7 @@
 
             <!-- Nominal Amount Input -->
             <div class="form-group">
-              <label for="expense-input-amount" class="form-label" style="display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+              <label for="expense-input-amount" class="form-label">
                 Nominal Pengeluaran (Rp)
               </label>
               <input type="text" id="expense-input-amount" class="form-input" placeholder="Cth: 50.000" required inputmode="numeric">
@@ -394,16 +354,15 @@
         <!-- Expense Transactions Section -->
         <div class="neo-card">
           <div class="section-title" style="justify-content: space-between;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+            <div>
               Riwayat Pengeluaran <span class="title-tag" id="expense-filter-tag">SEMUA</span>
             </div>
-            <button id="expense-btn-clear-all" style="background:transparent; border:none; color:#FF5277; font-weight:800; font-size:0.75rem; cursor:pointer; text-decoration:underline;">Clear All</button>
+            <button id="expense-btn-clear-all" class="btn-clear-all-link">Clear All</button>
           </div>
 
           <!-- Search Filter Box -->
           <div class="form-group" style="margin-bottom:12px;">
-            <input type="text" id="expense-input-search" class="form-input" style="padding: 8px 12px; font-size:0.85rem;" placeholder="🔍 Cari riwayat pengeluaran...">
+            <input type="text" id="expense-input-search" class="form-input" style="padding: 8px 12px; font-size:0.85rem;" placeholder="Cari riwayat pengeluaran...">
           </div>
 
           <!-- Expense Transaction List Container -->
@@ -425,46 +384,40 @@
           <div class="hero-amount" id="notes-hero-count" style="font-size: 2rem;">0 Catatan</div>
           <div class="hero-footer" style="margin-top:6px;">
             <span class="hero-badge" style="background:#FFF;">Memo Bebas</span>
-            <span style="display:inline-flex; align-items:center; gap:4px; font-weight:700; font-size:0.8rem;">
+            <span style="font-weight:700; font-size:0.8rem;">
               Tersimpan Lokal
             </span>
           </div>
         </div>
 
         <!-- Form Add Note Section -->
-        <div class="neo-card" style="background:#EBFBFF; border-color:#0F0F0F;">
-          <div class="section-title" style="color:#0284C7;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        <div class="neo-card" style="background:#FFFFFF; border-color:#0F0F0F;">
+          <div class="section-title">
             Tulis Catatan Baru
           </div>
           
           <form id="notes-form">
             <!-- Date Picker Trigger for Notes -->
             <div class="form-group">
-              <label class="form-label" style="display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M12 14v2l1 1"/></svg>
+              <label class="form-label">
                 Tanggal Catatan
               </label>
               <button type="button" id="notes-btn-datepicker" class="form-input" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; background:#FFF; text-align:left; user-select:none;">
                 <span id="notes-display-selected-date" style="font-family:var(--font-mono); font-weight:700; font-size:0.95rem;">Hari Ini</span>
-                <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; background:var(--neo-cyan); border:1.5px solid #000; padding:2px 8px; border-radius:6px; font-weight:800; box-shadow:1px 1px 0px #000;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                  PILIH
-                </span>
+                <span class="datepicker-pill-tag">PILIH</span>
               </button>
             </div>
 
             <!-- Nama / Judul Catatan -->
             <div class="form-group">
-              <label for="notes-input-title" class="form-label" style="display:flex; align-items:center; gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+              <label for="notes-input-title" class="form-label">
                 Nama / Judul Catatan
               </label>
               <input type="text" id="notes-input-title" class="form-input" placeholder="Cth: Rencana Belanja, Catatan Hutang, List Barang..." required autocomplete="off">
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn-neo" id="notes-btn-submit" style="background-color: var(--neo-cyan);">
+            <button type="submit" class="btn-neo" id="notes-btn-submit" style="background-color: var(--neo-yellow); color: var(--border-dark);">
               SIMPAN CATATAN NOW
             </button>
           </form>
@@ -473,16 +426,15 @@
         <!-- Notes List Section -->
         <div class="neo-card">
           <div class="section-title" style="justify-content: space-between;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+            <div>
               Riwayat Catatan
             </div>
-            <button id="notes-btn-clear-all" style="background:transparent; border:none; color:#FF5277; font-weight:800; font-size:0.75rem; cursor:pointer; text-decoration:underline;">Clear All</button>
+            <button id="notes-btn-clear-all" class="btn-clear-all-link">Clear All</button>
           </div>
 
           <!-- Search Filter Box -->
           <div class="form-group" style="margin-bottom:12px;">
-            <input type="text" id="notes-input-search" class="form-input" style="padding: 8px 12px; font-size:0.85rem;" placeholder="🔍 Cari riwayat catatan...">
+            <input type="text" id="notes-input-search" class="form-input" style="padding: 8px 12px; font-size:0.85rem;" placeholder="Cari riwayat catatan...">
           </div>
 
           <!-- Notes List Container -->
@@ -495,28 +447,50 @@
 
     </main>
 
-    <!-- Bottom Navigation Bar: Exactly 5 Tabs dengan Menu Voice di Tengah -->
+    <!-- Bottom Navigation Bar: Exactly 5 Tabs dengan Icon SVG Premium & Voice di Tengah -->
     <nav class="bottom-nav">
       <button class="nav-item active" id="nav-dashboard" data-tab="dashboard">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
+        <svg class="nav-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="9" rx="1.5"/>
+          <rect x="14" y="3" width="7" height="5" rx="1.5"/>
+          <rect x="14" y="12" width="7" height="9" rx="1.5"/>
+          <rect x="3" y="16" width="7" height="5" rx="1.5"/>
+        </svg>
         <span>Dashboard</span>
       </button>
       <button class="nav-item" id="nav-income" data-tab="income">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <svg class="nav-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+          <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+          <path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>
+        </svg>
         <span>Pendapatan</span>
       </button>
       <button class="nav-item nav-item-voice" id="nav-voice" type="button" title="Catat Cepat Pakai Suara">
-        <div class="nav-voice-bubble">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-        </div>
+        <svg class="nav-svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="8" y1="22" x2="16" y2="22"/>
+        </svg>
         <span>Voice</span>
       </button>
       <button class="nav-item" id="nav-expense" data-tab="expense">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+        <svg class="nav-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
+          <line x1="8" y1="8" x2="16" y2="8"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+          <line x1="8" y1="16" x2="13" y2="16"/>
+        </svg>
         <span>Pengeluaran</span>
       </button>
       <button class="nav-item" id="nav-notes" data-tab="notes">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+        <svg class="nav-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+          <rect x="8" y="2" width="8" height="4" rx="1"/>
+          <line x1="9" y1="12" x2="15" y2="12"/>
+          <line x1="9" y1="16" x2="13" y2="16"/>
+        </svg>
         <span>Catatan</span>
       </button>
     </nav>
@@ -526,9 +500,6 @@
   <!-- Custom Neo-Brutalist Delete Confirmation Modal -->
   <div id="custom-confirm-modal" class="modal-backdrop hidden">
     <div class="modal-card">
-      <div class="modal-icon-badge">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      </div>
       <h3 class="modal-title" id="modal-confirm-title">Hapus Pemasukan?</h3>
       <p class="modal-desc" id="modal-confirm-desc">Apakah kamu yakin ingin menghapus catatan pemasukan ini? Tindakan ini tidak dapat dibatalkan.</p>
       <div class="modal-actions">
@@ -543,22 +514,15 @@
     <div class="datepicker-card">
       <div class="dp-header-bar">
         <div class="dp-title">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
           PILIH TANGGAL
         </div>
-        <button type="button" class="dp-close-icon" id="dp-close-icon" title="Tutup">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <button type="button" class="dp-close-icon" id="dp-close-icon" title="Tutup">✕</button>
       </div>
 
       <div class="dp-month-nav">
-        <button type="button" class="dp-nav-btn" id="dp-prev-month" title="Bulan Sebelumnya">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
+        <button type="button" class="dp-nav-btn" id="dp-prev-month" title="Bulan Sebelumnya">«</button>
         <span class="dp-month-label" id="dp-month-year-label">September 2026</span>
-        <button type="button" class="dp-nav-btn" id="dp-next-month" title="Bulan Berikutnya">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
+        <button type="button" class="dp-nav-btn" id="dp-next-month" title="Bulan Berikutnya">»</button>
       </div>
 
       <div class="dp-quick-bar">
@@ -582,38 +546,35 @@
       <div class="voice-modal-header">
         <div class="voice-modal-title">
           <div class="voice-modal-logo-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="22"/>
+            </svg>
           </div>
           <div>
             <div class="voice-modal-title-text">CATAT SUARA CUANKU</div>
             <div class="voice-modal-subtitle">Bicara bebas untuk catat pendapatan & belanja</div>
           </div>
         </div>
-        <button type="button" class="voice-modal-close-btn" id="voice-modal-close-btn" title="Tutup Pop-up">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <button type="button" class="voice-modal-close-btn" id="voice-modal-close-btn" title="Tutup Pop-up">✕</button>
       </div>
 
       <div class="voice-modal-body">
-        <!-- Voice Status Pill -->
-        <div class="voice-status-pill" id="voice-status-pill" style="margin-bottom: 12px; width: 100%; justify-content: center;">
-          <span class="status-indicator-dot" id="voice-status-dot"></span>
-          <span id="voice-status-text">Siap mendengarkan suara Anda</span>
-        </div>
-
         <!-- Big Voice Action Area (Perekam Suara) -->
         <div class="neo-card voice-action-card" style="padding: 24px 16px; margin-bottom: 0;">
           <div class="mic-button-wrapper" style="margin: 6px auto 14px auto;">
             <div class="mic-pulse-ring" id="mic-pulse-ring"></div>
             <button type="button" class="btn-big-mic" id="btn-toggle-mic" title="Ketuk untuk Mulai/Berhenti Bicara">
-              <svg class="mic-icon" id="mic-icon-svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <svg class="big-mic-svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                <line x1="12" x2="12" y1="19" y2="22"/>
+                <line x1="12" y1="19" x2="12" y2="22"/>
+                <line x1="8" y1="22" x2="16" y2="22"/>
               </svg>
             </button>
           </div>
-          <div class="mic-prompt-label" id="mic-prompt-label" style="font-size:0.95rem; margin-bottom:12px;">Ketuk mikrofon untuk mulai bicara</div>
+          <div class="mic-prompt-label" id="mic-prompt-label" style="font-size:0.95rem; margin-bottom:12px;">Ketuk tombol untuk mulai bicara</div>
 
           <!-- Soundwave Animation Visualizer Bars -->
           <div class="voice-wave-container" id="voice-wave-container" style="height:28px; margin-bottom:14px;">
@@ -633,12 +594,12 @@
               <button type="button" class="btn-clear-transcript" id="btn-clear-voice" title="Bersihkan teks">Bersihkan</button>
             </div>
             <div class="transcript-content" id="voice-transcript-text" style="font-size:0.95rem; min-height:44px; color:var(--border-dark);">
-              "Silakan ketuk mikrofon di atas dan sebutkan transaksi Anda..."
+              "Silakan ketuk tombol di atas dan sebutkan transaksi Anda..."
             </div>
           </div>
 
           <div style="font-size:0.75rem; color:#666; font-weight:700; margin-top:14px; text-align:center;">
-            💡 Contoh: <i>"Beli bensin 30 ribu"</i> atau <i>"Gaji kantor 5 juta"</i>
+            Contoh: <i>"Beli bensin 30 ribu"</i> atau <i>"Gaji kantor 5 juta"</i>
           </div>
         </div>
 
@@ -650,7 +611,6 @@
   <div id="voice-detected-modal" class="modal-backdrop hidden">
     <div class="detected-modal-card" id="detected-modal-card">
       <div class="detected-header-pill" id="detected-header-pill">
-        <span id="detected-badge-icon" style="font-size:1.2rem;">💸</span>
         <span id="detected-badge-title">PENGELUARAN TERDETEKSI</span>
       </div>
 
@@ -669,12 +629,12 @@
 
       <!-- Quick Switch Type Button -->
       <button type="button" class="detected-switch-btn" id="btn-detected-switch-type">
-        ⇄ Ganti ke Pemasukan
+        Ganti ke Pemasukan
       </button>
 
       <!-- Quick Edit Accordion (Jika ada kesalahan dengar) -->
       <details class="detected-edit-details" id="detected-edit-details">
-        <summary class="detected-edit-summary">✏️ Koreksi Keterangan / Nominal</summary>
+        <summary class="detected-edit-summary">Koreksi Keterangan / Nominal</summary>
         <div class="detected-edit-inputs">
           <input type="text" id="detected-input-name" class="form-input" placeholder="Keterangan transaksi" style="padding: 8px 10px; font-size: 0.85rem; margin-bottom: 8px;" autocomplete="off">
           <input type="text" id="detected-input-amount" class="form-input" placeholder="Nominal Rp" inputmode="numeric" style="padding: 8px 10px; font-size: 0.85rem;" autocomplete="off">
@@ -687,7 +647,7 @@
         </button>
         <div class="detected-secondary-actions">
           <button type="button" class="btn-detected-retry" id="btn-detected-retry">
-            🎙️ Bicara Lagi
+            Bicara Lagi
           </button>
           <button type="button" class="btn-detected-cancel" id="btn-detected-cancel">
             Batal

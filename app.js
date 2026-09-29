@@ -180,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pop-Up Konfirmasi Otomatis (Pemasukan / Pengeluaran)
   const voiceDetectedModal = document.getElementById('voice-detected-modal');
   const detectedModalCard = document.getElementById('detected-modal-card');
-  const detectedBadgeIcon = document.getElementById('detected-badge-icon');
   const detectedBadgeTitle = document.getElementById('detected-badge-title');
   const detectedAmountDisplay = document.getElementById('detected-amount-display');
   const detectedNameDisplay = document.getElementById('detected-name-display');
@@ -627,7 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const amount = parseInt(rawAmount, 10);
 
         if (!name || isNaN(amount) || amount <= 0) {
-          showToast('⚠️ Isi sumber & nominal!');
+          showToast('Isi sumber & nominal!');
           return;
         }
 
@@ -650,7 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePickerButtonDisplays();
 
         renderAllViews();
-        showToast('Pemasukan Ditambahkan! 💰');
+        showToast('Pemasukan Ditambahkan!');
       });
     }
 
@@ -663,7 +662,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const amount = parseInt(rawAmount, 10);
 
         if (!name || isNaN(amount) || amount <= 0) {
-          showToast('⚠️ Isi keperluan & nominal!');
+          showToast('Isi keperluan & nominal!');
           return;
         }
 
@@ -686,7 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePickerButtonDisplays();
 
         renderAllViews();
-        showToast('Pengeluaran Dicatat! 💸');
+        showToast('Pengeluaran Dicatat!');
       });
     }
 
@@ -697,7 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = notesInputTitle.value.trim();
 
         if (!title) {
-          showToast('⚠️ Masukkan judul catatan!');
+          showToast('Masukkan judul catatan!');
           return;
         }
 
@@ -781,7 +780,7 @@ document.addEventListener('DOMContentLoaded', () => {
           isRecording = false;
           updateVoiceUIState(false);
           if (event.error === 'not-allowed') {
-            showToast('⚠️ Izin mic belum diizinkan');
+            showToast('Izin mic belum diizinkan');
             if (voiceStatusText) voiceStatusText.textContent = 'Izin mikrofon ditolak / diblokir browser';
           } else if (event.error === 'no-speech') {
             if (voiceStatusText) voiceStatusText.textContent = 'Tidak ada suara terdengar. Coba lagi!';
@@ -807,7 +806,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnToggleMic) {
       btnToggleMic.addEventListener('click', () => {
         if (!recognitionInstance) {
-          showToast('⚠️ Browser belum mendukung mic langsung!');
+          showToast('Browser belum mendukung mic langsung!');
           return;
         }
 
@@ -842,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnClearVoice) {
       btnClearVoice.addEventListener('click', () => {
         if (voiceTranscriptText) {
-          voiceTranscriptText.textContent = '"Silakan ketuk mikrofon di atas dan sebutkan transaksi Anda..."';
+          voiceTranscriptText.textContent = '"Silakan ketuk tombol di atas dan sebutkan transaksi Anda..."';
         }
         showToast('Hasil ucapan dibersihkan');
       });
@@ -909,7 +908,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const amount = parseInt(rawAmount, 10) || currentDetectedTx.amount;
 
         if (!name || isNaN(amount) || amount <= 0) {
-          showToast('⚠️ Masukkan nominal transaksi!');
+          showToast('Masukkan nominal transaksi!');
           if (detectedEditDetails) detectedEditDetails.open = true;
           if (detectedInputAmount) detectedInputAmount.focus();
           return;
@@ -929,7 +928,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveTransactions();
         renderAllViews();
 
-        showToast(isIncome ? 'Pemasukan Ditambahkan via Voice! 💰' : 'Pengeluaran Dicatat via Voice! 💸');
+        showToast(isIncome ? 'Pemasukan Ditambahkan via Voice!' : 'Pengeluaran Dicatat via Voice!');
         closeVoiceDetectedModal();
       });
     }
@@ -971,16 +970,12 @@ document.addEventListener('DOMContentLoaded', () => {
       detectedModalCard.className = `detected-modal-card ${isIncome ? 'is-income' : 'is-expense'}`;
     }
 
-    if (detectedBadgeIcon) {
-      detectedBadgeIcon.textContent = isIncome ? '💰' : '💸';
-    }
-
     if (detectedBadgeTitle) {
       detectedBadgeTitle.textContent = isIncome ? 'PEMASUKAN TERDETEKSI' : 'PENGELUARAN TERDETEKSI';
     }
 
     if (btnDetectedSwitchType) {
-      btnDetectedSwitchType.textContent = isIncome ? '⇄ Ganti ke Pengeluaran' : '⇄ Ganti ke Pemasukan';
+      btnDetectedSwitchType.textContent = isIncome ? 'Ganti ke Pengeluaran' : 'Ganti ke Pemasukan';
     }
 
     if (btnDetectedSave) {
@@ -1034,7 +1029,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (voiceWaveContainer) voiceWaveContainer.classList.remove('active');
       if (voiceStatusDot) voiceStatusDot.classList.remove('listening');
       if (voiceStatusText) voiceStatusText.textContent = 'Selesai mendengarkan';
-      if (micPromptLabel) micPromptLabel.textContent = 'Ketuk mikrofon untuk mulai bicara';
+      if (micPromptLabel) micPromptLabel.textContent = 'Ketuk tombol mikrofon untuk bicara';
     }
   }
 
@@ -1234,7 +1229,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (notesBtnClearAll) {
       notesBtnClearAll.addEventListener('click', async () => {
         if (notes.length === 0) {
-          showToast('⚠️ Belum ada catatan!');
+          showToast('Belum ada catatan!');
           return;
         }
 
@@ -1258,7 +1253,7 @@ document.addEventListener('DOMContentLoaded', () => {
       incomeBtnClearAll.addEventListener('click', async () => {
         const incomeList = transactions.filter(t => t.type === 'income');
         if (incomeList.length === 0) {
-          showToast('⚠️ Belum ada data pendapatan!');
+          showToast('Belum ada data pendapatan!');
           return;
         }
 
@@ -1282,7 +1277,7 @@ document.addEventListener('DOMContentLoaded', () => {
       expenseBtnClearAll.addEventListener('click', async () => {
         const expenseList = transactions.filter(t => t.type === 'expense');
         if (expenseList.length === 0) {
-          showToast('⚠️ Belum ada data pengeluaran!');
+          showToast('Belum ada data pengeluaran!');
           return;
         }
 
@@ -1615,19 +1610,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="tx-badge-type ${isIncome ? 'tx-badge-income' : 'tx-badge-expense'}">
               ${isIncome ? 'MASUK' : 'KELUAR'}
             </span>
-            <span style="display:inline-flex; align-items:center; gap:4px;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              ${tx.displayDate}
-            </span>
+            <span>${tx.displayDate}</span>
           </div>
         </div>
         <div class="tx-right">
           <div class="tx-amount ${isIncome ? 'tx-amount-income' : 'tx-amount-expense'}">
             ${isIncome ? '+' : '-'} ${formatRupiah(tx.amount)}
           </div>
-          <button class="tx-del-btn" data-id="${tx.id}" title="Hapus">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+          <button class="tx-del-btn" data-id="${tx.id}" title="Hapus">✕</button>
         </div>
       `;
       dashRecentList.appendChild(itemEl);
@@ -1678,7 +1668,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filtered.length === 0) {
       incomeTxListContainer.innerHTML = `
         <div class="empty-state">
-          💸 Belum ada catatan pendapatan.<br>
+          Belum ada catatan pendapatan.<br>
           <span style="font-size:0.8rem; font-weight:normal;">Tambahkan pendapatan baru lewat form di atas!</span>
         </div>
       `;
@@ -1693,17 +1683,12 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="tx-title">${escapeHTML(tx.name)}</div>
           <div class="tx-meta">
             <span class="tx-badge-type tx-badge-income">MASUK</span>
-            <span style="display:inline-flex; align-items:center; gap:4px;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              ${tx.displayDate}
-            </span>
+            <span>${tx.displayDate}</span>
           </div>
         </div>
         <div class="tx-right">
           <div class="tx-amount tx-amount-income">+ ${formatRupiah(tx.amount)}</div>
-          <button class="tx-del-btn" data-id="${tx.id}" title="Hapus">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+          <button class="tx-del-btn" data-id="${tx.id}" title="Hapus">✕</button>
         </div>
       `;
       incomeTxListContainer.appendChild(itemEl);
@@ -1754,7 +1739,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filtered.length === 0) {
       expenseTxListContainer.innerHTML = `
         <div class="empty-state">
-          🛒 Belum ada catatan pengeluaran.<br>
+          Belum ada catatan pengeluaran.<br>
           <span style="font-size:0.8rem; font-weight:normal;">Catat belanja dan kebutuhanmu lewat form di atas!</span>
         </div>
       `;
@@ -1769,17 +1754,12 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="tx-title">${escapeHTML(tx.name)}</div>
           <div class="tx-meta">
             <span class="tx-badge-type tx-badge-expense">KELUAR</span>
-            <span style="display:inline-flex; align-items:center; gap:4px;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              ${tx.displayDate}
-            </span>
+            <span>${tx.displayDate}</span>
           </div>
         </div>
         <div class="tx-right">
           <div class="tx-amount tx-amount-expense">- ${formatRupiah(tx.amount)}</div>
-          <button class="tx-del-btn" data-id="${tx.id}" title="Hapus">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+          <button class="tx-del-btn" data-id="${tx.id}" title="Hapus">✕</button>
         </div>
       `;
       expenseTxListContainer.appendChild(itemEl);
@@ -1828,18 +1808,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="note-title">${escapeHTML(note.title)}</div>
             <div style="display:flex; align-items:center; gap:6px; margin-top:4px; flex-wrap:wrap;">
               <div class="note-date-badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                 ${note.displayDate}
               </div>
-              ${isDone ? `<span class="note-done-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg> SELESAI</span>` : ''}
+              ${isDone ? `<span class="note-done-badge">SELESAI</span>` : ''}
             </div>
           </div>
           <div class="note-actions">
             <button class="note-check-btn ${isDone ? 'checked' : ''}" data-id="${note.id}" title="${isDone ? 'Batal Selesai' : 'Tandai Selesai'}">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+              ✓
             </button>
             <button class="tx-del-btn note-del-btn" data-id="${note.id}" title="Hapus Catatan">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              ✕
             </button>
           </div>
         </div>
