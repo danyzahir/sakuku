@@ -70,12 +70,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Tab View Containers
   const viewDashboard = document.getElementById('view-dashboard');
   const viewIncome = document.getElementById('view-income');
+  const viewVoice = document.getElementById('view-voice');
   const viewExpense = document.getElementById('view-expense');
   const viewNotes = document.getElementById('view-notes');
 
   // Navigation Items
   const navDashboard = document.getElementById('nav-dashboard');
   const navIncome = document.getElementById('nav-income');
+  const navVoice = document.getElementById('nav-voice');
   const navExpense = document.getElementById('nav-expense');
   const navNotes = document.getElementById('nav-notes');
 
@@ -164,6 +166,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const notesInputSearch = document.getElementById('notes-input-search');
   const notesListContainer = document.getElementById('notes-list-container');
 
+  // --- VOICE VIEW DOM ELEMENTS ---
+  const voiceBtnDatepicker = document.getElementById('voice-btn-datepicker');
+  const voiceDisplaySelectedDate = document.getElementById('voice-display-selected-date');
+  const voiceStatusDot = document.getElementById('voice-status-dot');
+  const voiceStatusText = document.getElementById('voice-status-text');
+  const btnToggleMic = document.getElementById('btn-toggle-mic');
+  const micPulseRing = document.getElementById('mic-pulse-ring');
+  const micPromptLabel = document.getElementById('mic-prompt-label');
+  const voiceWaveContainer = document.getElementById('voice-wave-container');
+  const voiceTranscriptText = document.getElementById('voice-transcript-text');
+  const btnClearVoice = document.getElementById('btn-clear-voice');
+  const voiceTypeIncome = document.getElementById('voice-type-income');
+  const voiceTypeExpense = document.getElementById('voice-type-expense');
+  const voiceInputName = document.getElementById('voice-input-name');
+  const voiceInputAmount = document.getElementById('voice-input-amount');
+  const voiceBtnSubmit = document.getElementById('voice-btn-submit');
+  const voiceChipBtns = document.querySelectorAll('.voice-chip-btn');
+  let voiceSelectedDate = new Date();
+  let voiceSelectedType = 'expense';
+  let isRecording = false;
+  let recognitionInstance = null;
+
   // --- INITIALIZATION ---
   updateClock();
   setInterval(updateClock, 1000);
@@ -173,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDashboardYearMonthNav();
   setupFormFormatting();
   setupFormSubmissions();
+  setupVoiceAssistant();
   setupDatepicker();
   setupConfirmationModal();
   setupActionListeners();
@@ -228,11 +253,12 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
   }
 
-  // --- TAB NAVIGATION SYSTEM (4 TABS) ---
+  // --- TAB NAVIGATION SYSTEM (5 TABS DENGAN VOICE DI TENGAH) ---
   function setupNavigationTabs() {
     const navItems = [
       { btn: navDashboard, view: viewDashboard, name: 'dashboard' },
       { btn: navIncome, view: viewIncome, name: 'income' },
+      { btn: navVoice, view: viewVoice, name: 'voice' },
       { btn: navExpense, view: viewExpense, name: 'expense' },
       { btn: navNotes, view: viewNotes, name: 'notes' }
     ];
@@ -249,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentActiveTab = tabName;
 
     // Update active nav button
-    [navDashboard, navIncome, navExpense, navNotes].forEach(btn => {
+    [navDashboard, navIncome, navVoice, navExpense, navNotes].forEach(btn => {
       if (!btn) return;
       if (btn.dataset.tab === tabName) {
         btn.classList.add('active');
@@ -262,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     [
       { view: viewDashboard, name: 'dashboard' },
       { view: viewIncome, name: 'income' },
+      { view: viewVoice, name: 'voice' },
       { view: viewExpense, name: 'expense' },
       { view: viewNotes, name: 'notes' }
     ].forEach(tab => {
@@ -350,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- FORM NUMBER FORMATTING (AUTO RUPIAH SEPARATOR) ---
   function setupFormFormatting() {
-    [incomeInputAmount, expenseInputAmount].forEach(input => {
+    [incomeInputAmount, expenseInputAmount, voiceInputAmount].forEach(input => {
       if (!input) return;
       input.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, '');
@@ -370,6 +397,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (expenseDisplaySelectedDate) {
       expenseDisplaySelectedDate.textContent = formatDisplayDateOnly(expenseSelectedDate);
+    }
+    if (voiceDisplaySelectedDate) {
+      voiceDisplaySelectedDate.textContent = formatDisplayDateOnly(voiceSelectedDate);
     }
     if (notesDisplaySelectedDate) {
       notesDisplaySelectedDate.textContent = formatDisplayDateOnly(notesSelectedDate);
@@ -448,6 +478,8 @@ document.addEventListener('DOMContentLoaded', () => {
       incomeSelectedDate = d;
     } else if (currentDatePickerTarget === 'expense') {
       expenseSelectedDate = d;
+    } else if (currentDatePickerTarget === 'voice') {
+      voiceSelectedDate = d;
     } else {
       notesSelectedDate = d;
     }
@@ -483,7 +515,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const today = new Date();
-    const targetSelected = currentDatePickerTarget === 'income' ? incomeSelectedDate : expenseSelectedDate;
+    const targetSelected = currentDatePickerTarget === 'income' 
+      ? incomeSelectedDate 
+      : (currentDatePickerTarget === 'expense' 
+          ? expenseSelectedDate 
+          : (currentDatePickerTarget === 'voice' ? voiceSelectedDate : notesSelectedDate));
 
     // Current month days
     for (let day = 1; day <= totalDays; day++) {
@@ -655,6 +691,399 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function saveNotes() {
     localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
+  }
+
+  // ==========================================================================
+  // VOICE ASSISTANT & TRANSACTION PARSER ENGINE
+  // ==========================================================================
+  function setupVoiceAssistant() {
+    // 1. Inisialisasi Web Speech API jika didukung browser
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+      try {
+        recognitionInstance = new SpeechRecognition();
+        recognitionInstance.lang = 'id-ID';
+        recognitionInstance.continuous = false;
+        recognitionInstance.interimResults = true;
+
+        recognitionInstance.onstart = () => {
+          isRecording = true;
+          updateVoiceUIState(true);
+        };
+
+        recognitionInstance.onresult = (event) => {
+          let interimTranscript = '';
+          let finalTranscript = '';
+
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript;
+            } else {
+              interimTranscript += event.results[i][0].transcript;
+            }
+          }
+
+          const currentSpeech = finalTranscript || interimTranscript;
+          if (currentSpeech && voiceTranscriptText) {
+            voiceTranscriptText.textContent = `"${currentSpeech}"`;
+          }
+
+          if (finalTranscript) {
+            processVoiceInput(finalTranscript);
+          }
+        };
+
+        recognitionInstance.onerror = (event) => {
+          console.warn('Speech recognition error:', event.error);
+          isRecording = false;
+          updateVoiceUIState(false);
+          if (event.error === 'not-allowed') {
+            showToast('⚠️ Izin mic belum diizinkan');
+            if (voiceStatusText) voiceStatusText.textContent = 'Izin mikrofon ditolak / diblokir browser';
+          } else if (event.error === 'no-speech') {
+            if (voiceStatusText) voiceStatusText.textContent = 'Tidak ada suara terdengar. Coba lagi!';
+          } else {
+            if (voiceStatusText) voiceStatusText.textContent = 'Gagal mendengar. Silakan coba lagi!';
+          }
+        };
+
+        recognitionInstance.onend = () => {
+          isRecording = false;
+          updateVoiceUIState(false);
+        };
+      } catch (err) {
+        console.error('Speech recognition init error:', err);
+      }
+    } else {
+      if (voiceStatusText) {
+        voiceStatusText.textContent = 'Browser belum mendukung mic. Gunakan contoh ucapan di bawah!';
+      }
+    }
+
+    // Toggle Mic Button Click
+    if (btnToggleMic) {
+      btnToggleMic.addEventListener('click', () => {
+        if (!recognitionInstance) {
+          showToast('⚠️ Browser belum mendukung mic langsung!');
+          return;
+        }
+
+        if (isRecording) {
+          try {
+            recognitionInstance.stop();
+          } catch (e) {
+            console.warn(e);
+          }
+        } else {
+          try {
+            recognitionInstance.start();
+          } catch (e) {
+            console.warn('Mic restart attempt:', e);
+            try {
+              recognitionInstance.stop();
+              setTimeout(() => {
+                try { recognitionInstance.start(); } catch (err) { console.error(err); }
+              }, 200);
+            } catch (err) {
+              console.error(err);
+            }
+          }
+        }
+      });
+    }
+
+    // Clear transcript
+    if (btnClearVoice) {
+      btnClearVoice.addEventListener('click', () => {
+        if (voiceTranscriptText) {
+          voiceTranscriptText.textContent = '"Belum ada suara terdeteksi. Silakan ketuk mikrofon di atas..."';
+        }
+        if (voiceInputName) voiceInputName.value = '';
+        if (voiceInputAmount) voiceInputAmount.value = '';
+        showToast('Hasil ucapan dibersihkan');
+      });
+    }
+
+    // Type Switcher (Income vs Expense)
+    if (voiceTypeIncome) {
+      voiceTypeIncome.addEventListener('click', () => {
+        setVoiceType('income');
+      });
+    }
+
+    if (voiceTypeExpense) {
+      voiceTypeExpense.addEventListener('click', () => {
+        setVoiceType('expense');
+      });
+    }
+
+    // Datepicker trigger for Voice
+    if (voiceBtnDatepicker) {
+      voiceBtnDatepicker.addEventListener('click', () => {
+        currentDatePickerTarget = 'voice';
+        calendarViewDate = new Date(voiceSelectedDate);
+        renderCalendar();
+        neoDatepickerModal.classList.remove('hidden');
+      });
+    }
+
+    // Voice quick chip samples
+    voiceChipBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sampleText = btn.dataset.sample;
+        if (sampleText) {
+          if (voiceTranscriptText) {
+            voiceTranscriptText.textContent = `"${sampleText}"`;
+          }
+          processVoiceInput(sampleText);
+          showToast('Suara contoh diproses! ⚡');
+        }
+      });
+    });
+
+    // Submit Voice Transaction Button
+    if (voiceBtnSubmit) {
+      voiceBtnSubmit.addEventListener('click', () => {
+        const name = voiceInputName.value.trim();
+        const rawAmount = voiceInputAmount.value.replace(/\D/g, '');
+        const amount = parseInt(rawAmount, 10);
+
+        if (!name || isNaN(amount) || amount <= 0) {
+          showToast('⚠️ Lengkapi keterangan & nominal!');
+          return;
+        }
+
+        const txDate = voiceSelectedDate || new Date();
+        const isIncome = voiceSelectedType === 'income';
+        const newTx = {
+          id: (isIncome ? 'tx_inc_' : 'tx_exp_') + Date.now(),
+          type: isIncome ? 'income' : 'expense',
+          name: name,
+          amount: amount,
+          timestamp: txDate.toISOString(),
+          displayDate: formatDisplayDateOnly(txDate)
+        };
+
+        transactions.unshift(newTx);
+        saveTransactions();
+
+        // Reset Voice Form
+        voiceInputName.value = '';
+        voiceInputAmount.value = '';
+        voiceSelectedDate = new Date();
+        updatePickerButtonDisplays();
+
+        renderAllViews();
+        showToast(isIncome ? 'Pemasukan Ditambahkan via Voice! 💰' : 'Pengeluaran Dicatat via Voice! 💸');
+      });
+    }
+  }
+
+  function setVoiceType(type) {
+    voiceSelectedType = type;
+    if (type === 'income') {
+      if (voiceTypeIncome) voiceTypeIncome.classList.add('active');
+      if (voiceTypeExpense) voiceTypeExpense.classList.remove('active');
+    } else {
+      if (voiceTypeExpense) voiceTypeExpense.classList.add('active');
+      if (voiceTypeIncome) voiceTypeIncome.classList.remove('active');
+    }
+  }
+
+  function updateVoiceUIState(recording) {
+    if (recording) {
+      if (btnToggleMic) btnToggleMic.classList.add('recording');
+      if (micPulseRing) micPulseRing.classList.add('active');
+      if (voiceWaveContainer) voiceWaveContainer.classList.add('active');
+      if (voiceStatusDot) voiceStatusDot.classList.add('listening');
+      if (voiceStatusText) voiceStatusText.textContent = 'Mendengarkan ucapan... Silakan bicara!';
+      if (micPromptLabel) micPromptLabel.textContent = 'Mendengarkan... Ketuk lagi untuk selesai';
+    } else {
+      if (btnToggleMic) btnToggleMic.classList.remove('recording');
+      if (micPulseRing) micPulseRing.classList.remove('active');
+      if (voiceWaveContainer) voiceWaveContainer.classList.remove('active');
+      if (voiceStatusDot) voiceStatusDot.classList.remove('listening');
+      if (voiceStatusText) voiceStatusText.textContent = 'Selesai mendengarkan';
+      if (micPromptLabel) micPromptLabel.textContent = 'Ketuk mikrofon untuk mulai bicara';
+    }
+  }
+
+  // --- SMART PARSER UNTUK BAHASA INDONESIA ---
+  function processVoiceInput(text) {
+    if (!text || typeof text !== 'string') return;
+    const cleanText = text.trim();
+
+    // 1. Ekstrak Nominal Rupiah
+    const parsedAmount = extractAmountFromIndonesian(cleanText);
+
+    // 2. Deteksi Tipe (Income vs Expense)
+    const detectedType = detectTransactionType(cleanText);
+    setVoiceType(detectedType);
+
+    // 3. Ekstrak Nama / Keterangan Transaksi
+    const extractedName = extractTransactionTitle(cleanText, detectedType);
+
+    // Isi ke Input Form
+    if (voiceInputName && extractedName) {
+      voiceInputName.value = extractedName;
+    }
+    if (voiceInputAmount && parsedAmount > 0) {
+      voiceInputAmount.value = new Intl.NumberFormat('id-ID').format(parsedAmount);
+    }
+  }
+
+  function detectTransactionType(text) {
+    const lower = text.toLowerCase();
+    
+    // Kata kunci Pendapatan
+    const incomeKeywords = [
+      'pendapatan', 'pemasukan', 'masuk', 'gaji', 'bonus', 'dapat', 'mendapatkan',
+      'terima', 'diterima', 'uang masuk', 'untung', 'cuan', 'jual', 'penjualan',
+      'thr', 'hadiah', 'kembalian', 'piutang', 'dividen', 'freelance', 'sampingan',
+      'saku', 'transfer masuk'
+    ];
+
+    // Kata kunci Pengeluaran
+    const expenseKeywords = [
+      'pengeluaran', 'keluar', 'beli', 'membeli', 'bayar', 'membayar', 'belanja',
+      'makan', 'minum', 'jajan', 'ngopi', 'kopi', 'ongkos', 'bensin', 'parkir',
+      'pulsa', 'kuota', 'listrik', 'air', 'pdam', 'wifi', 'internet', 'kos',
+      'kontrakan', 'sewa', 'cicilan', 'utang', 'hutang', 'obat', 'sedekah',
+      'infaq', 'donasi', 'nongkrong', 'topup', 'top up', 'transfer'
+    ];
+
+    let incomeScore = 0;
+    let expenseScore = 0;
+
+    for (const kw of incomeKeywords) {
+      if (lower.includes(kw)) incomeScore++;
+    }
+
+    for (const kw of expenseKeywords) {
+      if (lower.includes(kw)) expenseScore++;
+    }
+
+    if (incomeScore > expenseScore) {
+      return 'income';
+    }
+    return 'expense'; // Default transaksi harian adalah pengeluaran
+  }
+
+  function extractAmountFromIndonesian(text) {
+    const lower = text.toLowerCase().replace(/rp\.?/g, '').trim();
+
+    // 1. Cek pola angka eksplisit dengan satuan juta / jt / rb / ribu / k
+    const jutaMatch = lower.match(/(\d+(?:[\.,]\d+)?)\s*(?:juta|jt)\b/);
+    if (jutaMatch) {
+      const num = parseFloat(jutaMatch[1].replace(',', '.'));
+      if (!isNaN(num)) return Math.round(num * 1000000);
+    }
+
+    const ribuMatch = lower.match(/(\d+(?:[\.,]\d+)?)\s*(?:ribu|rb|k)\b/);
+    if (ribuMatch) {
+      const num = parseFloat(ribuMatch[1].replace(',', '.'));
+      if (!isNaN(num)) return Math.round(num * 1000);
+    }
+
+    // 2. Cek kata bilangan gabungan
+    if (lower.includes('satu setengah juta') || lower.includes('1 setengah juta')) return 1500000;
+    if (lower.includes('dua setengah juta') || lower.includes('2 setengah juta')) return 2500000;
+    if (lower.includes('tiga setengah juta') || lower.includes('3 setengah juta')) return 3500000;
+    if (lower.includes('setengah juta')) return 500000;
+
+    // 3. Cek kata jutaan
+    const kataAngka = {
+      'se': 1, 'satu': 1, 'dua': 2, 'tiga': 3, 'empat': 4, 'lima': 5,
+      'enam': 6, 'tujuh': 7, 'delapan': 8, 'sembilan': 9, 'sepuluh': 10,
+      'sebelas': 11, 'dua belas': 12, 'tiga belas': 13, 'empat belas': 14,
+      'lima belas': 15, 'enam belas': 16, 'tujuh belas': 17, 'delapan belas': 18,
+      'sembilan belas': 19, 'dua puluh': 20, 'tiga puluh': 30, 'empat puluh': 40,
+      'lima puluh': 50, 'seratus': 100, 'seribu': 1000
+    };
+
+    const wordJutaMatch = lower.match(/(satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh)\s+juta\b/);
+    if (wordJutaMatch) {
+      const mult = kataAngka[wordJutaMatch[1]] || 1;
+      return mult * 1000000;
+    }
+
+    // 4. Cek kata ribuan ejaan
+    if (lower.includes('ribu')) {
+      const beforeRibu = lower.split('ribu')[0].trim();
+      let ribuanVal = parseIndonesianWordsToNumber(beforeRibu);
+      if (ribuanVal > 0) return ribuanVal * 1000;
+    }
+
+    // 5. Cek nominal angka biasa (contoh: "50000", "25.000", "100.000")
+    const plainNumMatch = lower.match(/\b\d{1,3}(?:\.\d{3})+(?!\d)|\b\d{4,9}\b/);
+    if (plainNumMatch) {
+      const cleanNum = plainNumMatch[0].replace(/\./g, '');
+      const num = parseInt(cleanNum, 10);
+      if (!isNaN(num) && num > 0) return num;
+    }
+
+    return 0;
+  }
+
+  function parseIndonesianWordsToNumber(wordsStr) {
+    const tokens = wordsStr.split(/\s+/);
+    let total = 0;
+    let current = 0;
+
+    const map = {
+      'nol': 0, 'satu': 1, 'se': 1, 'dua': 2, 'tiga': 3, 'empat': 4,
+      'lima': 5, 'enam': 6, 'tujuh': 7, 'delapan': 8, 'sembilan': 9,
+      'sepuluh': 10, 'sebelas': 11, 'seratus': 100, 'seribu': 1000
+    };
+
+    for (let i = 0; i < tokens.length; i++) {
+      const w = tokens[i];
+      if (w === 'belas') {
+        current += 10;
+      } else if (w === 'puluh') {
+        current = (current === 0 ? 1 : current) * 10;
+      } else if (w === 'ratus') {
+        current = (current === 0 ? 1 : current) * 100;
+      } else if (map[w] !== undefined) {
+        current += map[w];
+      } else if (/^\d+$/.test(w)) {
+        current += parseInt(w, 10);
+      }
+    }
+    total += current;
+    return total;
+  }
+
+  function extractTransactionTitle(text, type) {
+    let title = text;
+
+    // Hapus nominal dari teks
+    title = title.replace(/\brp\.?\s*\d+(?:[\.,]\d+)?\b/gi, '');
+    title = title.replace(/\b\d+(?:[\.,]\d+)?\s*(?:juta|jt|ribu|rb|k)\b/gi, '');
+    title = title.replace(/\b\d{1,3}(?:\.\d{3})+\b/g, '');
+    title = title.replace(/\b\d{4,9}\b/g, '');
+
+    // Hapus ejaan nominal umum
+    title = title.replace(/\b(?:satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh|sebelas|seratus|seribu|setengah)\s+(?:juta|ribu)\b/gi, '');
+    title = title.replace(/\b(?:dua|tiga|empat|lima)\s+puluh\s+(?:lima\s+)?ribu\b/gi, '');
+    title = title.replace(/\b(?:ribu|juta|rupiah)\b/gi, '');
+
+    // Hapus kata perintah/awalan
+    title = title.replace(/\b(?:tolong|catatkan|catat|tambahkan|tambah|masukkan|buatkan|buat)\b/gi, '');
+    title = title.replace(/\b(?:sebesar|senilai|seharga|harga|sejumlah)\b/gi, '');
+    title = title.replace(/\b(?:pengeluaran|pemasukan|pendapatan)\b/gi, '');
+
+    // Rapikan spasi dan tanda baca
+    title = title.replace(/[,\.!\?]/g, ' ').replace(/\s+/g, ' ').trim();
+
+    if (!title) {
+      title = type === 'income' ? 'Pendapatan Baru' : 'Pengeluaran Baru';
+    } else {
+      title = title.charAt(0).toUpperCase() + title.slice(1);
+    }
+
+    return title;
   }
 
   // --- ACTIONS (DELETE & CLEAR ALL & SEARCH) ---
