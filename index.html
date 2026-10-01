@@ -130,6 +130,36 @@
       font-weight: 800;
       color: #0F0F0F;
     }
+    .splash-watermark {
+      position: absolute;
+      bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+      right: calc(18px + env(safe-area-inset-right, 0px));
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #0F0F0F;
+      color: #FFFFFF;
+      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 2px solid #0F0F0F;
+      box-shadow: 2.5px 2.5px 0px #FFFFFF;
+      pointer-events: none;
+      letter-spacing: 0.2px;
+    }
+    .splash-watermark .watermark-label {
+      opacity: 0.8;
+      font-size: 0.68rem;
+    }
+    .splash-watermark .watermark-brand {
+      color: #FFE600;
+      font-weight: 900;
+      font-family: monospace;
+      letter-spacing: 0.4px;
+    }
   </style>
 </head>
 <body style="background-color: #FFE600;">
@@ -160,6 +190,12 @@
           <span class="splash-status-percent" id="splash-status-percent">0%</span>
         </div>
       </div>
+    </div>
+
+    <!-- Watermark by danyzcodes di Pojok Kanan Bawah -->
+    <div class="splash-watermark" aria-hidden="true">
+      <span class="watermark-label">by</span>
+      <span class="watermark-brand">danyzcodes</span>
     </div>
   </div>
 
@@ -195,7 +231,7 @@
           <div class="hero-logo-badge">
             <img src="logo.png" alt="CuanKu Logo Icon">
           </div>
-          <div class="hero-label" id="dash-period-title">Saldo Bersih (Semua)</div>
+          <div class="hero-label" id="dash-period-title">Saldo Bersih (Bulan Ini)</div>
           <div class="hero-amount" id="net-balance-display">Rp 0</div>
           <div class="hero-footer" style="justify-content: flex-end;">
             <span id="hero-subtext">Real-time</span>
@@ -204,10 +240,10 @@
 
         <!-- Period Filter Tabs for Dashboard -->
         <div class="filter-tabs" role="tablist" aria-label="Filter Periode Dashboard">
-          <button class="tab-btn active" data-period="all" role="tab" aria-selected="true" id="dash-tab-all">Semua</button>
+          <button class="tab-btn" data-period="all" role="tab" aria-selected="false" id="dash-tab-all">Semua</button>
           <button class="tab-btn" data-period="daily" role="tab" aria-selected="false" id="dash-tab-daily">Harian</button>
           <button class="tab-btn" data-period="weekly" role="tab" aria-selected="false" id="dash-tab-weekly">Mingguan</button>
-          <button class="tab-btn" data-period="monthly" role="tab" aria-selected="false" id="dash-tab-monthly">Bulanan</button>
+          <button class="tab-btn active" data-period="monthly" role="tab" aria-selected="true" id="dash-tab-monthly">Bulanan</button>
         </div>
 
         <!-- Dual Mini Hero Grid: Pendapatan vs Pengeluaran (Bisa Diklik Langsung ke Halaman Terkait) -->
@@ -332,7 +368,7 @@
           <div class="hero-logo-badge">
             <img src="logo.png" alt="CuanKu Logo Icon">
           </div>
-          <div class="hero-label" id="income-period-title">Total Pendapatan (Semua)</div>
+          <div class="hero-label" id="income-period-title">Total Pendapatan (Bulan Ini)</div>
           <div class="hero-amount" id="income-hero-amount">Rp 0</div>
           <div class="hero-footer">
             <span class="hero-badge" id="income-tx-count-badge">0 Transaksi Masuk</span>
@@ -342,10 +378,10 @@
 
         <!-- Period Filter Tabs for Income -->
         <div class="filter-tabs" role="tablist" aria-label="Filter Periode Pendapatan">
-          <button class="tab-btn active" data-period="all" role="tab" aria-selected="true" id="income-tab-all">Semua</button>
+          <button class="tab-btn" data-period="all" role="tab" aria-selected="false" id="income-tab-all">Semua</button>
           <button class="tab-btn" data-period="daily" role="tab" aria-selected="false" id="income-tab-daily">Harian</button>
           <button class="tab-btn" data-period="weekly" role="tab" aria-selected="false" id="income-tab-weekly">Mingguan</button>
-          <button class="tab-btn" data-period="monthly" role="tab" aria-selected="false" id="income-tab-monthly">Bulanan</button>
+          <button class="tab-btn active" data-period="monthly" role="tab" aria-selected="true" id="income-tab-monthly">Bulanan</button>
         </div>
 
         <!-- Quick Stats Grid Income -->
@@ -405,7 +441,7 @@
         <div class="neo-card">
           <div class="section-title" style="justify-content: space-between;">
             <div>
-              Riwayat Pendapatan <span class="title-tag" id="income-filter-tag">SEMUA</span>
+              Riwayat Pendapatan <span class="title-tag" id="income-filter-tag">BULANAN</span>
             </div>
             <button id="income-btn-clear-all" class="btn-clear-all-link">Clear All</button>
           </div>
@@ -433,7 +469,7 @@
           <div class="hero-logo-badge">
             <img src="logo.png" alt="CuanKu Logo Icon">
           </div>
-          <div class="hero-label" id="expense-period-title">Total Pengeluaran (Semua)</div>
+          <div class="hero-label" id="expense-period-title">Total Pengeluaran (Bulan Ini)</div>
           <div class="hero-amount" id="expense-hero-amount">Rp 0</div>
           <div class="hero-footer">
             <span class="hero-badge" id="expense-tx-count-badge">0 Transaksi Keluar</span>
@@ -443,10 +479,10 @@
 
         <!-- Period Filter Tabs for Expense -->
         <div class="filter-tabs" role="tablist" aria-label="Filter Periode Pengeluaran">
-          <button class="tab-btn active" data-period="all" role="tab" aria-selected="true" id="expense-tab-all">Semua</button>
+          <button class="tab-btn" data-period="all" role="tab" aria-selected="false" id="expense-tab-all">Semua</button>
           <button class="tab-btn" data-period="daily" role="tab" aria-selected="false" id="expense-tab-daily">Harian</button>
           <button class="tab-btn" data-period="weekly" role="tab" aria-selected="false" id="expense-tab-weekly">Mingguan</button>
-          <button class="tab-btn" data-period="monthly" role="tab" aria-selected="false" id="expense-tab-monthly">Bulanan</button>
+          <button class="tab-btn active" data-period="monthly" role="tab" aria-selected="true" id="expense-tab-monthly">Bulanan</button>
         </div>
 
         <!-- Quick Stats Grid Expense -->
@@ -506,7 +542,7 @@
         <div class="neo-card">
           <div class="section-title" style="justify-content: space-between;">
             <div>
-              Riwayat Pengeluaran <span class="title-tag" id="expense-filter-tag">SEMUA</span>
+              Riwayat Pengeluaran <span class="title-tag" id="expense-filter-tag">BULANAN</span>
             </div>
             <button id="expense-btn-clear-all" class="btn-clear-all-link">Clear All</button>
           </div>

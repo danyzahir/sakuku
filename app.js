@@ -22,16 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Current Active Tab: 'dashboard' | 'income' | 'expense'
+  // Current Active Tab: 'dashboard' | 'income' | 'expense'
   let currentActiveTab = 'dashboard';
 
-  // Period Filters per View
-  let dashPeriod = 'all';    // 'all' | 'daily' | 'weekly' | 'monthly'
-  let incomePeriod = 'all';
-  let expensePeriod = 'all';
+  // Period Filters per View (Default: 'monthly' agar di awal bulan baru otomatis ter-reset untuk bulan berjalan)
+  let dashPeriod = 'monthly';    // 'all' | 'daily' | 'weekly' | 'monthly'
+  let incomePeriod = 'monthly';
+  let expensePeriod = 'monthly';
 
   // Dashboard Year & Month Selection States (12-Month System)
-  let dashYear = new Date().getFullYear();
-  let dashSelectedMonth = 'all'; // 'all' or 0..11
+  const initialCurrentDate = new Date();
+  let dashYear = initialCurrentDate.getFullYear();
+  let dashSelectedMonth = initialCurrentDate.getMonth(); // Default ke bulan kalender saat ini (0..11)
+  let lastCheckedMonth = initialCurrentDate.getMonth();
+  let lastCheckedYear = initialCurrentDate.getFullYear();
 
   // Notes State (Independent from financial transactions)
   const NOTES_STORAGE_KEY = 'cuanku_neo_notes_clean_v1';
@@ -286,6 +290,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (headerTodayDate) {
       headerTodayDate.textContent = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
     }
+    // Otomatis deteksi pergantian bulan saat aplikasi tetap terbuka
+    if (now.getMonth() !== lastCheckedMonth || now.getFullYear() !== lastCheckedYear) {
+      lastCheckedMonth = now.getMonth();
+      lastCheckedYear = now.getFullYear();
+      if (dashPeriod === 'monthly') {
+        dashYear = lastCheckedYear;
+        dashSelectedMonth = lastCheckedMonth;
+      }
+      renderAllViews();
+    }
   }
 
   function formatRupiah(number) {
@@ -433,6 +447,15 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAllViews();
   }
 
+  // Helper sinkronisasi tombol tab filter dashboard
+  function syncDashTabButtons() {
+    document.querySelectorAll('#view-dashboard .tab-btn').forEach(b => {
+      const isTarget = b.dataset.period === dashPeriod;
+      b.classList.toggle('active', isTarget);
+      b.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+    });
+  }
+
   // --- PERIOD FILTER TAB LOGIC ---
   function setupPeriodFilters() {
     // 1. Dashboard Filters
@@ -445,6 +468,14 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.classList.add('active');
         btn.setAttribute('aria-selected', 'true');
         dashPeriod = btn.dataset.period;
+        if (dashPeriod === 'monthly') {
+          const now = new Date();
+          dashYear = now.getFullYear();
+          dashSelectedMonth = now.getMonth();
+        } else if (dashPeriod === 'all') {
+          dashSelectedMonth = 'all';
+        }
+        updateMonthChipActiveState();
         renderDashboard();
       });
     });
@@ -1481,7 +1512,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const chip = e.target.closest('.month-chip');
         if (!chip) return;
         const val = chip.dataset.month;
-        dashSelectedMonth = val === 'all' ? 'all' : parseInt(val, 10);
+        if (val === 'all') {
+          dashSelectedMonth = 'all';
+          dashPeriod = 'all';
+        } else {
+          dashSelectedMonth = parseInt(val, 10);
+          dashPeriod = 'monthly';
+        }
+        syncDashTabButtons();
         updateMonthChipActiveState();
         renderDashboard();
       });
@@ -1521,21 +1559,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let periodFiltered;
     let periodTitle;
 
+    const now = new Date();
+
     if (dashPeriod === 'daily') {
       periodFiltered = filterByPeriod(transactions, 'daily');
       periodTitle = 'Saldo Bersih (Hari Ini)';
     } else if (dashPeriod === 'weekly') {
       periodFiltered = filterByPeriod(transactions, 'weekly');
       periodTitle = 'Saldo Bersih (7 Hari Terakhir)';
-    } else if (dashSelectedMonth !== 'all') {
-      // Specific month selected
+    } else if (dashPeriod === 'monthly' || dashSelectedMonth !== 'all') {
+      // Bulanan / bulan tertentu yang dipilih
+      const targetMonth = (dashSelectedMonth !== 'all') ? dashSelectedMonth : now.getMonth();
       periodFiltered = transactions.filter(t => {
         const d = new Date(t.timestamp);
-        return d.getFullYear() === dashYear && d.getMonth() === dashSelectedMonth;
+        return d.getFullYear() === dashYear && d.getMonth() === targetMonth;
       });
-      periodTitle = `Saldo Bersih (${monthNamesId[dashSelectedMonth]} ${dashYear})`;
+      const isCurrentCalMonth = (dashYear === now.getFullYear() && targetMonth === now.getMonth());
+      periodTitle = isCurrentCalMonth 
+        ? `Saldo Bersih (Bulan Ini - ${monthNamesId[targetMonth]} ${dashYear})`
+        : `Saldo Bersih (${monthNamesId[targetMonth]} ${dashYear})`;
     } else {
-      // Whole 12 months for dashYear
+      // Whole 12 months for dashYear ('all')
       periodFiltered = transactions.filter(t => {
         const d = new Date(t.timestamp);
         return d.getFullYear() === dashYear;
@@ -1649,9 +1693,12 @@ document.addEventListener('DOMContentLoaded', () => {
       col.addEventListener('click', () => {
         if (dashSelectedMonth === m) {
           dashSelectedMonth = 'all';
+          dashPeriod = 'all';
         } else {
           dashSelectedMonth = m;
+          dashPeriod = 'monthly';
         }
+        syncDashTabButtons();
         updateMonthChipActiveState();
         renderDashboard();
       });
@@ -1723,11 +1770,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const avg = count > 0 ? Math.round(totalIncome / count) : 0;
     const max = count > 0 ? Math.max(...filteredIncomes.map(t => t.amount)) : 0;
 
+    const currentMonthLabel = monthNamesId[new Date().getMonth()];
     const periodTitles = {
       all: 'Total Pendapatan (Semua)',
       daily: 'Total Pendapatan (Hari Ini)',
       weekly: 'Total Pendapatan (7 Hari Terakhir)',
-      monthly: 'Total Pendapatan (Bulan Ini)'
+      monthly: `Total Pendapatan (Bulan Ini - ${currentMonthLabel})`
     };
 
     if (incomePeriodTitle) incomePeriodTitle.textContent = periodTitles[incomePeriod];
@@ -1794,11 +1842,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const avg = count > 0 ? Math.round(totalExpense / count) : 0;
     const max = count > 0 ? Math.max(...filteredExpenses.map(t => t.amount)) : 0;
 
+    const currentMonthLabel = monthNamesId[new Date().getMonth()];
     const periodTitles = {
       all: 'Total Pengeluaran (Semua)',
       daily: 'Total Pengeluaran (Hari Ini)',
       weekly: 'Total Pengeluaran (7 Hari Terakhir)',
-      monthly: 'Total Pengeluaran (Bulan Ini)'
+      monthly: `Total Pengeluaran (Bulan Ini - ${currentMonthLabel})`
     };
 
     if (expensePeriodTitle) expensePeriodTitle.textContent = periodTitles[expensePeriod];

@@ -2091,3 +2091,36 @@ body::before {
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
+
+.splash-watermark {
+  position: absolute;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  right: calc(18px + env(safe-area-inset-right, 0px));
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--border-dark, #0F0F0F);
+  color: #FFFFFF;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 2px solid var(--border-dark, #0F0F0F);
+  box-shadow: 2.5px 2.5px 0px #FFFFFF;
+  pointer-events: none;
+  letter-spacing: 0.2px;
+}
+
+.splash-watermark .watermark-label {
+  opacity: 0.8;
+  font-size: 0.68rem;
+}
+
+.splash-watermark .watermark-brand {
+  color: var(--neo-yellow, #FFE600);
+  font-weight: 900;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.4px;
+}
